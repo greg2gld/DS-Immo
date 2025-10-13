@@ -1,1 +1,8 @@
+pandas
+numpy
+matplotlib
+seaborn
+time
+os
+json
 streamlit_lottie
