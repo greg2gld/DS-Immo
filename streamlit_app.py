@@ -1,9 +1,10 @@
 
 import streamlit as st
-# import pandas as pd
-# import numpy as np
-# import matplotlib.pyplot as plt
-# import seaborn as sns
+from streamlit_lottie import st_lottie
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 import time
 import os
 import json
@@ -15,7 +16,7 @@ import page_2
 
 # on peut mettre des emoji avec win+;
 
-from streamlit_lottie import st_lottie
+
 
 
 
