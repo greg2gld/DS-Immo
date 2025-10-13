@@ -1,58 +1,25 @@
 
-import streamlit as st
-from streamlit_lottie import st_lottie
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-import time
-import os
-import json
 
-# lister les pages ici
-import page_0
-import page_1
-import page_2
+
+# nos modules
+from tools import *
+
+
 
 # on peut mettre des emoji avec win+;
-
-
-
-
-
 
 st.title("Estimation prix de l'immobilier 😍")
 st.sidebar.title("Sommaire")
 pages=["Introduction", "Exploration", "DataVizualization", "Modélisation"]
 page=st.sidebar.radio("Aller vers", pages)
 
+# lister les pages ici
+import page_0 # Introduction
+import page_1 # Exploration
+import page_2 # DataVizualization
+import page_3 # Modélisation
 
-# mettre dans un module séparé pour l'appeler des autres pages
-
-# --- Animation Loader depuis fichiers locaux ---
-def load_lottiefile(filepath):
-    try:
-        with open(filepath, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except:
-        return None
-
-def safe_lottie_path(filepath, height=200):
-    anim = load_lottiefile(filepath)
-    if anim:
-        st_lottie(anim, height=height)
-    else:
-        st.warning(f"❌ Animation '{filepath}' introuvable.")
-
-
-
-# --- Animation d'en-tête principale ---
-safe_lottie_path(os.path.join("images", "r6BoDuSSqg.json"), height=500)
-
-# with st.echo():
-#     st_lottie(json.load("images\\r6BoDuSSqg.json"))
-
-
+# appel de chaque page
 if page == pages[0] : 
   page_0.affiche()
 
