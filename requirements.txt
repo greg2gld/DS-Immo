@@ -4,4 +4,4 @@ numpy
 matplotlib
 seaborn
 streamlit_lottie
-
+tabulate
