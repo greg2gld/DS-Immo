@@ -5,7 +5,13 @@ code de la page
 
 import streamlit as st
 
-def affiche():
-    st.write("###")
-    st.write("hello je suis la page 1")
+print(__name__)
 
+def main():
+    st.title("Page 1")
+    st.write("Bienvenue sur la page 1 !")
+    st.write("Quelques contenus ici…")
+
+if __name__ == "__main__":
+    print("page 1")
+    main()

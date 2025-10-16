@@ -12,6 +12,9 @@ import seaborn as sns
 import time
 import os
 import json
+import random
+
+
 
 
 # --- Animation Loader depuis fichiers locaux ---
