@@ -23,19 +23,23 @@ def affiche():
         
 
     with col2:
-        st.markdown("### pres projet")
+        st.markdown("""                    
+                    **Objectif :** 
+                    Construire un modèle de prédiction performant capable d’estimer le prix d’un bien en fonction de ses caractéristiques (surface, localisation, type de bien, etc.) et de son environnement.
+                    """)
         
     st.header("Introduction")
 
 
-    st.text("""
-            hello
+    st.markdown("""
+            **Raison d'être du projet :**
+                
+            ...
+
+            **Pourquoi la Gironde ?**
+            
+            ...
+
             """)
     
-    # def generate_random_value(x): 
-    #     return random.uniform(0, x) 
-    # a = generate_random_value(10) 
-    # b = generate_random_value(20) 
-
-    # st.write(a)
-    # st.write(b)
+    

@@ -7,5 +7,5 @@ import streamlit as st
 
 def affiche():
     st.write("### ")
-    st.write("hello je suis la page 2")
+    st.write("hello je suis la page 1")
 
