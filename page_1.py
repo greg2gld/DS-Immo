@@ -14,7 +14,7 @@ def affiche():
                 
                 ➡️ Sans données fournies par DataScientest 
                 ➡️ Long travail de recherche / exploration des données opensource
-                ➡️ Pour retenir celles nous semblant pertinentes
+                ➡️ Pour retenir celles nous semblant pertinentes : ~20 fichiers, 2.9Go de données
                 """)
     st.header("1. La base principale")
     st.subheader("Le fichier DVF géolocalisé (2020–2024)")
@@ -87,7 +87,7 @@ def affiche():
     st.write(tableau.to_markdown(index=False), unsafe_allow_html=False)
 
     # affiche les champs et description des datasets
-    st.subheader("Datasets, champs et descriptions")
+    st.header("3. détails des datasets (champs et descriptions)")
     df = csv_to_df(os.path.join(PATH_DATA, "presentation_data_retenus.csv"), sep=";")
     # st.dataframe(df.head())
     l_choix = df['Dataset'].unique()             
