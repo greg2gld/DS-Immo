@@ -14,7 +14,8 @@ import os
 import json
 import random
 
-
+# constantes
+PATH_DATA = ".\\data\\"
 
 
 # --- Animation Loader depuis fichiers locaux ---
@@ -32,3 +33,13 @@ def safe_lottie_path(filepath, height=200):
     else:
         st.warning(f"❌ Animation '{filepath}' introuvable.")
 
+# mise en cache des fichiers chargés
+# pour éviter qu'ils se rechargent dès qu'on clique qque part
+@st.cache_data
+def csv_to_df(filepath, sep=","):
+    print(time.strftime('%Y_%m_%d %H:%M:%S'),
+          "chargement : ", filepath)
+    df = pd.read_csv(filepath, sep=sep)
+    print(time.strftime('%Y_%m_%d %H:%M:%S'), 
+          "chargement terminé")
+    return df

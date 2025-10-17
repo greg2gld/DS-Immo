@@ -13,7 +13,11 @@ import page_st_fct # qques fonctions streamlit
 import page_test1 # qques tests
 
 
-
+st.set_page_config(
+    page_title="Mon application large",
+    page_icon="🖥️",
+    layout="wide",     # ← ICI : mode large
+)
 
 # juste pour vérifier que le code tourne...
 print(time.strftime('%Y_%m_%d %H:%M:%S'),
@@ -25,7 +29,7 @@ st.sidebar.title("Immo Gironde")
 st.sidebar.write("🌊  🏄‍♀️  🏖️  🏡  🌲 ")
 st.sidebar.header("Sommaire")
 
-pages=["Introduction", "Exploration", "DataVizualization", "Modélisation", "Conclusion", "__st fonctions", "__test1"]
+pages=["Introduction", "Exploration", "DataVisualization", "Modélisation", "Conclusion", "__st fonctions", "__test1"]
 page=st.sidebar.radio("Aller vers", pages)
 
 st.sidebar.markdown("""

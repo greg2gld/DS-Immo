@@ -9,10 +9,16 @@ print(__name__)
 
 def affiche():
     st.title("Exploration")
-    st.header("Base principale")
     st.markdown("""
-                **Le fichier DVF géolocalisé (2020–2024) :**
+    Projet proposé par l'équipe, donc :
                 
+                ➡️ Sans données fournies par DataScientest 
+                ➡️ Long travail de recherche / exploration des données opensource
+                ➡️ Pour retenir celles nous semblant pertinentes
+                """)
+    st.header("1. La base principale")
+    st.subheader("Le fichier DVF géolocalisé (2020–2024)")
+    st.markdown("""
                 Il contient:
                 - L’ensemble des biens pour lesquels une transactions immobilières a été réalisées :
                     - En France 
@@ -21,8 +27,10 @@ def affiche():
                 - Un ensemble de caratéristiques des biens (type, surface, nombre de pièces...)
                 """)
     
-    st.header("Données périphériques")
+    st.header("2. Les données périphériques")
     st.markdown("""
+                
+                
                 Le DVF a été enrichi avec les données open source suivantes :
                 """)
                 
@@ -73,12 +81,18 @@ def affiche():
                 '[Data Gouv](https://www.data.gouv.fr/fr/datasets/points-dinterets-openstreetmap/)',
                 '[Géoservices](https://geoservices.ign.fr/contoursiris)'],
             }
+    tableau = pd.DataFrame(data)
+    tableau = tableau.replace("\n", ". ", regex=True)
+    # Afficher le tableau en Markdown 
+    st.write(tableau.to_markdown(index=False), unsafe_allow_html=False)
 
-    df = pd.DataFrame(data)
-    df = df.replace("\n", ". ", regex=True)
-
-    # Afficher le tableau en Markdown (statique mais propre)
-    st.write(df.to_markdown(index=False), unsafe_allow_html=False)
-    # print(df.to_markdown(index=False))
+    # affiche les champs et description des datasets
+    st.subheader("Datasets, champs et descriptions")
+    df = csv_to_df(os.path.join(PATH_DATA, "presentation_data_retenus.csv"), sep=";")
+    # st.dataframe(df.head())
+    l_choix = df['Dataset'].unique()             
+    selection = st.selectbox("Choisir un DataSet :" , l_choix)
+    st.write("Nombre de champs : ", df.shape[0])
+    st.dataframe(df[df['Dataset'] == selection][['Libellé des variables', 'Descriptif des variables']])
     
 

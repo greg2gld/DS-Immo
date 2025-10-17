@@ -1,0 +1,151 @@
+﻿Dataset;Libellé des variables;Descriptif des variables
+DVF géolocalisé;id_mutation;Identifiant de la mutation débutant par l’année de la vente du bien suivi d’une numérotation continue
+DVF géolocalisé;date_mutation;Date de signature de l’acte (au format JJ/MM/AAAA) – Une restitution au format AAAA/MM/JJ 
+DVF géolocalisé;numero_disposition;Dans le cas des actes comprenant plusieurs mutations – appelées « dispositions » –, chacune d’entre elles est identifiée dans les fichiers par un numéro de disposition. Seules les dispositions concernant les mutations à titre onéreux sont restituées dans le fichier.
+DVF géolocalisé;nature_mutation;Vente, vente en l’état futur d’achèvement, vente de terrain à bâtir, adjudication, expropriation ou échange
+DVF géolocalisé;valeur_fonciere;Il s’agit du montant ou de l’évaluation déclaré(e) dans le cadre d’une mutation à titre onéreux. La valeur foncière inclut : les frais d’agence, s’ils sont à la charge du vendeur. l’éventuelle TVA. exclut : les frais d’agence, s’ils sont à la charge de l’acquéreur. les frais de notaires. la valeur des biens meubles stipulée dans l’acte de mutation
+DVF géolocalisé;adresse_numero;Numéro dans la voie
+DVF géolocalisé;adresse_suffixe;Indice de répétition (B/T/Q)
+DVF géolocalisé;adresse_nom_voie;Libellé de la voie
+DVF géolocalisé;adresse_code_voie;Code Rivoli (répertoire informatisé codifiant, par commune, les voies, les lieux dits et les ensembles immobiliers)
+DVF géolocalisé;code_postal;Code postal
+DVF géolocalisé;code_commune;Code commune INSEE (5 caractères)
+DVF géolocalisé;nom_commune;Libellé de la commune
+DVF géolocalisé;code_departement;Numéro du département
+DVF géolocalisé;ancien_code_commune;Anciens code et libellé de la commune dans le cas d’une restructuration
+DVF géolocalisé;ancien_nom_commune;Anciens code et libellé de la commune dans le cas d’une restructuration
+DVF géolocalisé;id_parcelle;Référence cadastrale de la parcelle
+DVF géolocalisé;ancien_id_parcelle;Ancienne référence cadastrale de la parcelle (en cas d’opérations intervenues sur la ou les parcelles concernées)
+DVF géolocalisé;numero_volume;Numéro de volume
+DVF géolocalisé;lot1_numero;Un lot de copropriété est constitué d’une partie privative (appartement, cave, etc.) et d’une quote-part de partie commune (tantièmes). Seuls les 5 premiers lots sont mentionnés. Si le nombre de lots est supérieur à 5, ils ne sont pas restitués.
+DVF géolocalisé;lot1_surface_carrez;Un lot de copropriété est constitué d’une partie privative (appartement, cave, etc.) et d’une quote-part de partie commune (tantièmes). Seuls les 5 premiers lots sont mentionnés. Si le nombre de lots est supérieur à 5, ils ne sont pas restitués.
+DVF géolocalisé;lot2_numero;Un lot de copropriété est constitué d’une partie privative (appartement, cave, etc.) et d’une quote-part de partie commune (tantièmes). Seuls les 5 premiers lots sont mentionnés. Si le nombre de lots est supérieur à 5, ils ne sont pas restitués.
+DVF géolocalisé;lot2_surface_carrez;Un lot de copropriété est constitué d’une partie privative (appartement, cave, etc.) et d’une quote-part de partie commune (tantièmes). Seuls les 5 premiers lots sont mentionnés. Si le nombre de lots est supérieur à 5, ils ne sont pas restitués.
+DVF géolocalisé;lot3_numero;Un lot de copropriété est constitué d’une partie privative (appartement, cave, etc.) et d’une quote-part de partie commune (tantièmes). Seuls les 5 premiers lots sont mentionnés. Si le nombre de lots est supérieur à 5, ils ne sont pas restitués.
+DVF géolocalisé;lot3_surface_carrez;Un lot de copropriété est constitué d’une partie privative (appartement, cave, etc.) et d’une quote-part de partie commune (tantièmes). Seuls les 5 premiers lots sont mentionnés. Si le nombre de lots est supérieur à 5, ils ne sont pas restitués.
+DVF géolocalisé;lot4_numero;Un lot de copropriété est constitué d’une partie privative (appartement, cave, etc.) et d’une quote-part de partie commune (tantièmes). Seuls les 5 premiers lots sont mentionnés. Si le nombre de lots est supérieur à 5, ils ne sont pas restitués.
+DVF géolocalisé;lot4_surface_carrez;Un lot de copropriété est constitué d’une partie privative (appartement, cave, etc.) et d’une quote-part de partie commune (tantièmes). Seuls les 5 premiers lots sont mentionnés. Si le nombre de lots est supérieur à 5, ils ne sont pas restitués.
+DVF géolocalisé;lot5_numero;Un lot de copropriété est constitué d’une partie privative (appartement, cave, etc.) et d’une quote-part de partie commune (tantièmes). Seuls les 5 premiers lots sont mentionnés. Si le nombre de lots est supérieur à 5, ils ne sont pas restitués.
+DVF géolocalisé;lot5_surface_carrez;Un lot de copropriété est constitué d’une partie privative (appartement, cave, etc.) et d’une quote-part de partie commune (tantièmes). Seuls les 5 premiers lots sont mentionnés. Si le nombre de lots est supérieur à 5, ils ne sont pas restitués.
+DVF géolocalisé;nombre_lots;Nombre total de lots par disposition.
+DVF géolocalisé;code_type_local;"1 : maison 
+2 : appartement
+3 : dépendance (isolée)
+4 : local industriel et commercial ou assimilés"
+DVF géolocalisé;type_local;"1 : maison 
+2 : appartement
+3 : dépendance (isolée)
+4 : local industriel et commercial ou assimilés"
+DVF géolocalisé;surface_reelle_bati;La surface réelle est la surface mesurée au sol entre les murs ou séparations et arrondie au mètre carré inférieur. Les surfaces des dépendances ne sont pas prises en compte.
+DVF géolocalisé;nombre_pieces_principales;Les cuisines, salles d’eau et dépendances ne sont pas prises en compte.
+DVF géolocalisé;code_nature_culture;Voir table de référence des natures de culture en annexe
+DVF géolocalisé;nature_culture;Voir table de référence des natures de culture en annexe
+DVF géolocalisé;code_nature_culture_speciale;Voir table de référence des natures de culture spéciale en annexe
+DVF géolocalisé;nature_culture_speciale;Voir table de référence des natures de culture spéciale en annexe
+DVF géolocalisé;surface_terrain;Surface du terrain
+DVF géolocalisé;longitude;Coordonnées géographiques (longitude)
+DVF géolocalisé;latitude;Coordonnées géographiques (latitude)
+BDNB;type_dpe;Permet de préciser le type de DPE (arrêté 2012/arrêté 2021), son objet (logement, immeuble de logement, tertiaire) et la méthode de calcul utilisé (3CL conventionnel, facture ou RT2012/RE2020)
+BDNB;classe_bilan_dpe;Classe du DPE issu de la synthèse du double seuil sur les consommations d’énergie primaire et les émissions de CO2 sur les 5 usages (ecs/chauffage/climatisation/éclairage/auxiliaires).  valable uniquement pour les DPE appliquant la méthode de l'arrêté du 31 mars 2021 (en vigueur actuellement)
+BDNB;classe_emission_ges;classe d'émission GES du DPE 5 usages (chauffage, ECS, climatisation, éclairage et auxiliaires). valable uniquement pour les DPE appliquant la méthode de l'arrêté du 31 mars 2021 (en vigueur actuellement)
+BDNB;surface_habitable_logement;surface habitable du logement renseignée sauf dans le cas du dpe à l'immeuble. (surface habitable au sens du DPE)
+BDNB;classe_conso_energie_arrete_2012;classe d'émission GES du DPE 3 usages (Chauffage, ECS, Climatisation). Valable uniquement pour les DPE appliquant la méthode de l'arrêté du 8 février 2012
+BDNB;classe_emission_ges_arrete_2012;classe d'émission GES du DPE 3 usages (Chauffage, ECS, Climatisation). Valable uniquement pour les DPE appliquant la méthode de l'arrêté du 8 février 2012
+BDNB;periode_construction_dpe;"période de construction selon la segmentation par grandes périodes ""énergétiques"" du DPE"
+BDNB;annee_construction_dpe;année de construction du logement évaluée par le DPE
+BDNB;type_energie_chauffage;type d'énergie pour le générateur de chauffage principal
+BDNB;type_generateur_chauffage;type de générateur de chauffage principal
+BDNB;type_generateur_ecs;type de générateur d'eau chaude sanitaire (ECS) principal
+BDNB;type_vitrage;type de vitrage principal des baies vitrées du DPE
+BDNB;type_materiaux_menuiserie;type de matériaux principal des menuiseries des baies vitrées du DPE
+FiLoSoFi;IRIS / CODGEO;Code géographique de la zone (IRIS ou commune), selon la codification Insee pour les fichiers avec le niveau de détail le plus fin
+FiLoSoFi;PIMP;Part des ménages fiscaux imposés (%)
+FiLoSoFi;TP60;Taux de bas revenus déclarés au seuil de 60 % du revenu déclaré par unité de consommation médian métropolitain (%)
+FiLoSoFi;INCERT;Incertitude sur le taux de bas revenus et la part des ménages imposés
+FiLoSoFi;Q1;1er quartile du revenu déclaré par unité de consommation (en euros)
+FiLoSoFi;MED;Médiane du revenu déclaré par unité de consommation (en euros)
+FiLoSoFi;Q3;3ème quartile du revenu déclaré par unité de consommation (en euros)
+FiLoSoFi;EQ;Ecart inter-quartile rapporté à  la médiane du revenu déclaré par unité de consommation
+FiLoSoFi;D1;1er décile du revenu déclaré par unité de consommation (en euros)
+FiLoSoFi;D2;2ème décile du revenu déclaré par unité de consommation (en euros)
+FiLoSoFi;D3;3ème décile du revenu déclaré par unité de consommation (en euros)
+FiLoSoFi;D4;4ème décile du revenu déclaré par unité de consommation (en euros)
+FiLoSoFi;D6;6ème décile du revenu déclaré par unité de consommation (en euros)
+FiLoSoFi;D7;7ème décile du revenu déclaré par unité de consommation (en euros)
+FiLoSoFi;D8;8ème décile du revenu déclaré par unité de consommation (en euros)
+FiLoSoFi;D9;9ème décile du revenu déclaré par unité de consommation (en euros)
+FiLoSoFi;RD;Rapport interdécile D9/D1
+FiLoSoFi;S80S20;S80/S20 du revenu déclaré par unité de consommation
+FiLoSoFi;GI;Indice de Gini du revenu déclaré par unité de consommation
+FiLoSoFi;PACT;Part des revenus d'activité (%)
+FiLoSoFi;PTSA;dont part des salaires et traitements (%)
+FiLoSoFi;PCHO;dont part des indemnités de chômage (%)
+FiLoSoFi;PBEN;dont part des revenus des activités non salariées (%)
+FiLoSoFi;PPEN;Part des pensions, retraites et rentes (%)
+FiLoSoFi;PAUT;Part des autres revenus (essentiellement des revenus du patrimoine) (%)
+IRIS;CODE_IRIS;Code unique de l’IRIS (9 caractères)
+IRIS;CODE_COMM;Code INSEE de la commune
+IRIS;NOM_COM;Nom de la commune
+IRIS;INSEE_COM;Identifiant INSEE de la commune (équivalent à CODE_COMM)
+IRIS;NOM_IRIS;Nom de l’IRIS (souvent lié à un quartier ou un secteur d'activité)
+IRIS;TYP_IRIS;Type d’IRIS (H = habitat, A = activité, D = divers)
+IRIS;geometry;Géométrie du polygone (les contours de l’IRIS au format géospatial)
+Densité de population;codgeo;Code officiel géographique de l’INSEE
+Densité de population;libgeo;Libellé de la commune
+Densité de population;an;Année du recensement
+Densité de population;dens_pop;Densité de population (habitants/km²)
+Délinquance;CODGEO_2024;Code officiel géographique de l’INSEE
+Délinquance;annee                  ;Année enregistrée
+Délinquance;indicateur;"Indicateur observé. Faute de pouvoir les agréger ou hiérarchiser, nous les avons tous pris:
+Coups et blessures volontaires
+Coups et blessures volontaires intrafamiliaux
+Autres coups et blessures volontaires
+Violences sexuelles
+Vols avec armes
+Vols violents sans arme
+Vols sans violence contre des personnes
+Cambriolages de logement
+Vols de véhicules
+Vols dans les véhicules
+Vols d'accessoires sur véhicules
+Destructions et dégradations volontaires
+Usage de stupéfiants
+Usage de stupéfiants (AFD)
+Trafic de stupéfiants
+Escroqueries"
+Délinquance;taux_pour_mille;Nombre d’évènement pour 1000 habitants ou logements
+Délinquance;est_diffuse;"Indique si l’information est disponible ou non au niveau commune.
+Elle ne sera pas diffusée si le nombre de faits est suffisamment faible pour pour que les victimes puissent être identifiées."
+Délinquance;complement_info_taux;Nombre d’évènements pour 1000 habitants ou logements des communes où les faits ne sont pas diffusés à leur niveau (cf champs ci-dessus). Pour chaque région, les données de ses communes non diffusées sont agrégées en un seul chiffre. 
+Transports;dataset_custom_title                 ;Nom du jeu de données source
+Transports;dataset_id et ;"Identifiants du jeu de données, accessibles via l’URL
+https://transport.data.gouv.fr/datasets/{id}"
+Transports;dataset_datagouv_id;"Identifiants du jeu de données, accessibles via l’URL
+https://transport.data.gouv.fr/datasets/{id}"
+Transports;resource_id et ;Identifiants de la ressource, accessibles via l’URL
+Transports;resource_datagouv_id;https://transport.data.gouv.fr/resourcets/{id}
+Transports;resource_title;Nom de la resource
+Transports;dataset_aom_id;Identifiant interne au PAN de l’Autorité Organisatrice de la Mobilité (AOM)
+Transports;dataset_region_id;Identifiant interne au PAN de la région
+Transports;di_id;Identifiant interne au PAN
+Transports;stop_name;Nom de l’arrêt
+Transports;stop_lat;Latitude de l’arrêt
+Transports;stop_lon;Longitude de l’arrêt
+Transports;location_type;Type d’arrêt, selon la documentation GFTS (par exemple, 0 pour un arrêt standard, 1 pour une station, etc.)
+BPE;DOM;Domaine principal de l’équipement (ex : santé, enseignement)
+BPE;SDOM;Catégorie spécifique au sein du domaine
+BPE;TYPEQU;Code du type d’équipement
+BPE;LONGITUDE et LATITUDE;Coordonnées géographiques de l’équipement
+OpenStreetMap;@lon;Longitude du POI
+OpenStreetMap;@lat;Latitude du POI
+OpenStreetMap;name;Son nom
+OpenStreetMap;history;"N’est renseigné que si le POI est de catégorie “historique”. N’ont été retenus sur la Gironde que les sous types: 
+building
+castle
+memorial
+monument
+ruins"
+OpenStreetMap;leisure;"N’est renseigné que si le POI est de catégorie “historique”. 
+N’ont été retenus sur la Gironde que les sous types:
+garden
+park"
