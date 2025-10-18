@@ -5,7 +5,6 @@ code de la page
 
 from tools import *
 
-print(__name__)
 
 def affiche():
     st.title("Exploration")

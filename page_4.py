@@ -3,9 +3,11 @@ code de la page
 
 """
 
-import streamlit as st
+from tools import *
 
 def affiche():
-    st.write("### ")
-    st.write("hello je suis la page 4")
-
+    st.title("Model hybrid")
+    st.markdown("""
+    Et si on remettait un peu d'humain dans la machine ?...
+                """)
+    st.header("1. ...")

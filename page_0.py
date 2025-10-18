@@ -54,8 +54,12 @@ Et aussi... mettre en pratique nos connaissances en Data Science et manipuler pl
 ...
 
 **🌍Pourquoi la Gironde ?**
-- Région variée, présentant un bon échantillon du territoire (villes, zones rurales, bord de mer)
-- Attracitivité économique entrainant un bonne dynamique des prix
+
+- Besoin de réduire le périmètre : s'adapter à nos ressources (temps humain et machines)
+- Région vaste et variée, présentant un bon échantillon du territoire 
+    - Aussi bien géographique (villes, zones rurales, bord de mer)
+    - Que socio-économique
+- Attracitivité de certaines zones et bonne dynamique des prix
  
 De plus, un des membres de l'équipe habite sur place, ce qui nous a permis de vérifier certaines infos et d'être dans le concrêt ! 🤓
 

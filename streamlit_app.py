@@ -9,13 +9,14 @@ import page_1 # Exploration
 import page_2 # DataVizualization
 import page_3 # Modélisation
 import page_4 # Modélisation
+import page_5 # Model hybride
 import page_st_fct # qques fonctions streamlit 
 import page_test1 # qques tests
 
 
 st.set_page_config(
-    page_title="Mon application large",
-    page_icon="🖥️",
+    page_title="Prix Immobilier Gironde",
+    page_icon="🏡",
     layout="wide",     # ← ICI : mode large
 )
 
@@ -29,7 +30,7 @@ st.sidebar.title("Immo Gironde")
 st.sidebar.write("🌊  🏄‍♀️  🏖️  🏡  🌲 ")
 st.sidebar.header("Sommaire")
 
-pages=["Introduction", "Exploration", "DataVisualization", "Modélisation", "Conclusion", "__st fonctions", "__test1"]
+pages=["Introduction", "Exploration", "DataVisualization", "Modélisation", "Model hybride", "Conclusion", "__st fonctions", "__test1"]
 page=st.sidebar.radio("Aller vers", pages)
 
 st.sidebar.markdown("""
@@ -63,9 +64,12 @@ if page == pages[4] :
   page_4.affiche()
 
 if page == pages[5] : 
-  page_st_fct.affiche()
+  page_5.affiche()
 
 if page == pages[6] : 
+  page_st_fct.affiche()
+
+if page == pages[7] : 
   page_test1.affiche()
 
 # trash

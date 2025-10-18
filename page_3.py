@@ -3,9 +3,9 @@ code de la page
 
 """
 
-import streamlit as st
+from tools import *
 
 def affiche():
-    st.write("### ")
+    st.title("Modélisation")
     st.write("hello je suis la page 3")
 
