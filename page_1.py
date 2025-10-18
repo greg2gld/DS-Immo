@@ -10,11 +10,14 @@ def affiche():
     st.title("Exploration")
     st.markdown("""
     Projet proposé par l'équipe, donc :
-                
-                ➡️ Sans données fournies par DataScientest 
-                ➡️ Long travail de recherche / exploration des données opensource
-                ➡️ Pour retenir celles nous semblant pertinentes : ~20 fichiers, 2.9Go de données
+
+        ➡️ Sans données fournies par DataScientest 
+        ➡️ Travail important de recherche / exploration des données opensource
+        ➡️ Pour ne retenir que celles nous semblant pertinentes et exploitables : ~20 fichiers, 2.9Go de données
+  
                 """)
+    st.image(os.path.join("images", "Diag1.png"), )
+    ###########
     st.header("1. La base principale")
     st.subheader("Le fichier DVF géolocalisé (2020–2024)")
     st.markdown("""
@@ -25,7 +28,7 @@ def affiche():
                 - Des informations géographiques précises (coordonnées GPS) des biens
                 - Un ensemble de caratéristiques des biens (type, surface, nombre de pièces...)
                 """)
-    
+    ###########
     st.header("2. Les données périphériques")
     st.markdown("""
                 
@@ -85,6 +88,7 @@ def affiche():
     # Afficher le tableau en Markdown 
     st.write(tableau.to_markdown(index=False), unsafe_allow_html=False)
 
+    ###########
     # affiche les champs et description des datasets
     st.header("3. détails des datasets (champs et descriptions)")
     df = csv_to_df(os.path.join(PATH_DATA, "presentation_data_retenus.csv"), sep=";")
@@ -93,5 +97,18 @@ def affiche():
     selection = st.selectbox("Choisir un DataSet :" , l_choix)
     st.write("Nombre de champs : ", df.shape[0])
     st.dataframe(df[df['Dataset'] == selection][['Libellé des variables', 'Descriptif des variables']])
+
+    ###########
+    st.header("4. Agrégation des dataset et Data Quality")
+    st.markdown("""
+                Afin d'être exploitables, ces fichiers ont dûs être retravaillés :
+                - Restructurer certaines bases (ex : pour le DVF, regrouper une même transaction sur 1 seule ligne,...)
+                - Trouver des jointures communes
+                - Gérer les données manquantes et les données aberrantes
+                - Calculer de nouvelles variables (prix au m², distance avec les POI...)
+
+                **todo: insérer graph ou tableau** 
+                """)
     
+                
 
