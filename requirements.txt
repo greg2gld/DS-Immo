@@ -5,3 +5,5 @@ matplotlib
 seaborn
 streamlit_lottie
 tabulate
+plotly.express
+geopandas
