@@ -13,7 +13,6 @@ import page_5 # Model hybride
 import page_st_fct # qques fonctions streamlit 
 import page_test1 # qques tests
 
-
 st.set_page_config(
     page_title="Prix Immobilier Gironde",
     page_icon="🏡",
@@ -23,8 +22,6 @@ st.set_page_config(
 # juste pour vérifier que le code tourne...
 print(time.strftime('%Y_%m_%d %H:%M:%S'),
       "En cours d'exec...")
-
-print(os.getcwd())
 
 st.sidebar.title("Immo Gironde")
 st.sidebar.write("🌊  🏄‍♀️  🏖️  🏡  🌲 ")

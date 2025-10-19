@@ -1,5 +1,5 @@
 """
-code de la page
+démo de qques fonctions streamlit
 
 """
 
@@ -7,6 +7,7 @@ import streamlit as st
 from tools import *
 
 def affiche():
+    st.title("__ démo de qques fonctions streamlit __") 
     st.title("affiche un titre") 
     st.header("affiche un deuxième titre") 
     st.subheader("affiche un troisième titre")
@@ -79,6 +80,7 @@ def affiche():
     fig = plt.figure()
     sns.countplot(x=[1, 1, 2, 3, 3, 3])
     st.pyplot(fig)
+
 
     
 

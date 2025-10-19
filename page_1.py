@@ -16,7 +16,10 @@ def affiche():
         ➡️ Pour ne retenir que celles nous semblant pertinentes et exploitables : ~20 fichiers, 2.9Go de données
   
                 """)
+    # affiche diagramme des étapes de construction de la base principale
+    # source https://docs.google.com/presentation/d/1Cx-NRASi_imzg-NS3-fqf4HBvuTBbgFHO2DN_glNasI/edit?usp=drive_link
     st.image(os.path.join("images", "Diag1.png"), )
+    
     ###########
     st.header("1. La base principale")
     st.subheader("Le fichier DVF géolocalisé (2020–2024)")
