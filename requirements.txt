@@ -9,3 +9,6 @@ plotly.express
 geopandas
 joblib
 scikit-learn
+lightgbm
+encode
+modelization
