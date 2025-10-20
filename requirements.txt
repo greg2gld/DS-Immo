@@ -7,3 +7,4 @@ streamlit_lottie
 tabulate
 plotly.express
 geopandas
+joblib
