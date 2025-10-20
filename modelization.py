@@ -354,11 +354,14 @@ def prepare_data(data):
         return df
 
     df = clean_columns(df)
-
+    #ToDo fix
+    df['A_roport_moins_10km'] = 0
+    df['A_roport_pp_bin_ml'] = 0
+    print(df.columns)
     cols = ['surface_reelle_bati_1', 'nombre_pieces_principales_1', 'surface_terrain_2', 'periode_construction_dpe_1', 'MED', 'Action_sociale_pour_enfants_en_bas_ge_moins_10km', 'A_roport_moins_10km', 'Commerces_alimentaires_moins_10km', 'D_chetterie_moins_10km', 'Grandes_surfaces_moins_10km', 'H_bergement_et_restauration_tudiants_moins_10km', 'Mairie_moins_10km', 'M_decins_g_n_ralistes_moins_10km', 'Param_dical_moins_10km', 'Parcs_moins_10km', 'Services_fun_raires_moins_10km', 'Sports_loisirs_et_culture_moins_10km', 'Sp_cialistes_M_dical_moins_10km', 'Station_service_moins_10km', 'Tourisme_moins_10km', 'Transports_en_commun_moins_10km', 'tablissements_et_services_de_sant__moins_10km', 'DPE_1', 'GES_1', 'terrain_1', 'appartement', 'maison', 'prix_moyen', 'prix_m2_moyen', 'surface_par_piece', 'prix_theorique', 'comparaison_marche', 'prix_m2', 'travaux', 'premium', 'Sports_loisirs_et_culture_pp_bin_ml', 'Commerces_alimentaires_pp_bin_ml', 'A_roport_pp_bin_ml', 'Trains_et_autres_transports_pp_bin_ml', 'Mairie_pp_bin_ml', 'D_chetterie_pp_bin_ml', 'surface_terrain_1_bin_ml', 'nb_equipements_proches_bin_ml', 'code_nature_culture_1_Aucun', 'code_nature_culture_1_S', 'code_nature_culture_2_Aucun', 'code_nature_culture_2_S', 'type_energie_chauffage_1_electricite', 'type_energie_chauffage_1_gaz', 'type_energie_chauffage_1_reseau_de_chaleur']
     df = df[cols]
     model = immo_bundle["model"]
-    preds =  model.predict(df)
+    preds = model.predict(df)
     
     st.success(f"Le bien est estimé à {preds[0]:,.0f}€")
     
