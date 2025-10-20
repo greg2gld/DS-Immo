@@ -8,3 +8,4 @@ tabulate
 plotly.express
 geopandas
 joblib
+sklearn
