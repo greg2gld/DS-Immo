@@ -11,10 +11,10 @@ from datetime import date, time, datetime
 
 def affiche():
     st.title("Modélisation")
-    tab_immo, tab_other  = st.tabs(["🏠 Prix Immo (prédiction)", "@ToDo"])
+    tab_immo, tab_compare  = st.tabs(["Prédiction immobilière", "Comparatif Modèles immobiliers"])
 
     with tab_immo:
-        st.header("🏠 Prédiction du prix d’un bien immobilier en Gironde")
+        st.header("Prédiction du prix d’un bien immobilier en Gironde")
         with st.form("immo_form"):
             st.subheader("Localisation")
             col_numero, col_rue, col_insee = st.columns([0.1,0.7,0.2])
@@ -66,10 +66,27 @@ def affiche():
             with col_surface_2:
                 code_nature_culture_1 = st.selectbox("Nature terrain principal", codes_nature_culture.keys(), key="code_nature_culture_1")
                 code_nature_culture_2 = st.selectbox("Nature autres terrains", codes_nature_culture.keys(), key="code_nature_culture_2")
-        
+
+            model_type = st.selectbox("Type de modèle (Global, entraîné sur des maisons uniquement ou sur des appartements uniquement)", ["global", "appartements", "maisons"], key="model_type", index=0)
             submitted = st.form_submit_button("Prédire")
+    with tab_compare:
+        st.header("Comparatif de modèles immobiliers")
+        data = [
+            {'GES_1': 'A', 'FormSubmitter:immo_form-Prédire': True, 'periode_construction_dpe_1': 'avant 1948', 'type_bien': 'Appartement', 'type_energie_chauffage_1': 'gaz', 'code_nature_culture_2': 'Aucun', 'nombre_pieces_principales_1': 3, 'surface_terrain_1': 0.0, 'adresse_insee': '33001', 'surface_reelle_bati_1': 60.0, 'DPE_1': 'A', 'surface_terrain_2': 0.0, 'adresse_num': '18', 'adresse_voie': 'Avenue de Foncastel', 'code_nature_culture_1': 'Aucun'},
+            {'GES_1': 'A', 'FormSubmitter:immo_form-Prédire': True, 'periode_construction_dpe_1': 'avant 1948', 'type_bien': 'Appartement', 'type_energie_chauffage_1': 'gaz', 'code_nature_culture_2': 'Aucun', 'nombre_pieces_principales_1': 3, 'surface_terrain_1': 0.0, 'adresse_insee': '33001', 'surface_reelle_bati_1': 60.0, 'DPE_1': 'A', 'surface_terrain_2': 0.0, 'adresse_num': '18', 'adresse_voie': 'Avenue de Foncastel', 'code_nature_culture_1': 'Aucun'},
+            {'GES_1': 'A', 'FormSubmitter:immo_form-Prédire': True, 'periode_construction_dpe_1': 'avant 1948', 'type_bien': 'Appartement', 'type_energie_chauffage_1': 'gaz', 'code_nature_culture_2': 'Aucun', 'nombre_pieces_principales_1': 3, 'surface_terrain_1': 0.0, 'adresse_insee': '33001', 'surface_reelle_bati_1': 60.0, 'DPE_1': 'A', 'surface_terrain_2': 0.0, 'adresse_num': '18', 'adresse_voie': 'Avenue de Foncastel', 'code_nature_culture_1': 'Aucun'},
+            {'GES_1': 'A', 'FormSubmitter:immo_form-Prédire': True, 'periode_construction_dpe_1': 'avant 1948', 'type_bien': 'Appartement', 'type_energie_chauffage_1': 'gaz', 'code_nature_culture_2': 'Aucun', 'nombre_pieces_principales_1': 3, 'surface_terrain_1': 0.0, 'adresse_insee': '33001', 'surface_reelle_bati_1': 60.0, 'DPE_1': 'A', 'surface_terrain_2': 0.0, 'adresse_num': '18', 'adresse_voie': 'Avenue de Foncastel', 'code_nature_culture_1': 'Aucun'},
+            {'GES_1': 'A', 'FormSubmitter:immo_form-Prédire': True, 'periode_construction_dpe_1': 'avant 1948', 'type_bien': 'Appartement', 'type_energie_chauffage_1': 'gaz', 'code_nature_culture_2': 'Aucun', 'nombre_pieces_principales_1': 3, 'surface_terrain_1': 0.0, 'adresse_insee': '33001', 'surface_reelle_bati_1': 60.0, 'DPE_1': 'A', 'surface_terrain_2': 0.0, 'adresse_num': '18', 'adresse_voie': 'Avenue de Foncastel', 'code_nature_culture_1': 'Aucun'}
+        ]
 
-
+        for item in data:
+            st.table({
+                "Modèle global" : f"Prix estimé à {prepare_data(item, "global"):,.0f}€",
+                "Modèle entraîné uniquement sur les maisons" : f"Prix estimé à {prepare_data(item, "maisons"):,.0f}€",
+                "Modèle entrainé uniquement sur les appartements" : f"Prix estimé à {prepare_data(item, "appartements"):,.0f}€"
+            })
+ 
     # Déclenchement
     if submitted:
-        X = prepare_data(st.session_state)
+        prix = prepare_data(st.session_state)
+        st.success(f"Le bien est estimé à {prix:,.0f}€ avec le modele {st.session_state["model_type"]}")

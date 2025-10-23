@@ -7,17 +7,6 @@ import requests
 import streamlit as st
 from encode import *
 
-
-csv = pd.read_csv(f"./data/dvf2024.csv")
-csv = csv.rename(columns={
-    "PrixMoyen": "prix_moyen",
-    "Prixm2Moyen": "prix_m2_moyen",
-    "SurfaceMoy": "surface_moyenne"
-})
-
-
-all_cols = ['surface_reelle_bati_1', 'nombre_pieces_principales_1', 'surface_terrain_2', 'periode_construction_dpe_1', 'MED', 'Action sociale pour enfants en bas-âge_moins_10km', "Autres services d'action sociale_moins_10km", 'Aéroport_moins_10km', 'Commerces alimentaires_moins_10km', 'Déchetterie_moins_10km', 'Enseignement supérieur_moins_10km', 'Formation continue_moins_10km', 'Grandes surfaces_moins_10km', 'Hébergement et restauration étudiants_moins_10km', 'Mairie_moins_10km', 'Médecins généralistes_moins_10km', 'Paramédical_moins_10km', 'Parcs_moins_10km', 'Patrimoine_moins_10km', 'Police et Gendarmerie_moins_10km', 'Services funéraires_moins_10km', 'Sports, loisirs et culture_moins_10km', 'Spécialistes – Médical_moins_10km', 'Station-service_moins_10km', 'Tourisme_moins_10km', 'Trains et autres transports_moins_10km', 'Transports en commun_moins_10km', 'Écoles, collèges, lycées_moins_10km', 'Établissements et services de santé_moins_10km', 'dens_pop', 'DPE_1', 'GES_1', 'terrain_1', 'appartement', 'maison', 'prix_moyen', 'prix_m2_moyen', 'surface_moyenne', 'surface_par_piece', 'prix_theorique', 'comparaison_marche', 'prix_m2', 'travaux', 'premium', 'delinquence_bin_ml', 'Action sociale pour enfants en bas-âge_pp_bin_ml', 'Paramédical_pp_bin_ml', 'Sports, loisirs et culture_pp_bin_ml', "Autres services d'action sociale_pp_bin_ml", 'Hébergement et restauration étudiants_pp_bin_ml', 'Commerces alimentaires_pp_bin_ml', 'Station-service_pp_bin_ml', 'Écoles, collèges, lycées_pp_bin_ml', 'Enseignement supérieur_pp_bin_ml', 'Établissements et services de santé_pp_bin_ml', 'Médecins généralistes_pp_bin_ml', 'Spécialistes – Médical_pp_bin_ml', 'Formation continue_pp_bin_ml', 'Grandes surfaces_pp_bin_ml', 'Aéroport_pp_bin_ml', 'Trains et autres transports_pp_bin_ml', 'Services funéraires_pp_bin_ml', 'Police et Gendarmerie_pp_bin_ml', 'Mairie_pp_bin_ml', 'Déchetterie_pp_bin_ml', 'Tourisme_pp_bin_ml', 'Parcs_pp_bin_ml', 'Transports en commun_pp_bin_ml', 'surface_terrain_1_bin_ml', 'nb_equipements_proches_bin_ml', 'code_nature_culture_1_AB', 'code_nature_culture_1_AG', 'code_nature_culture_1_Aucun', 'code_nature_culture_1_J', 'code_nature_culture_1_L', 'code_nature_culture_1_P', 'code_nature_culture_1_S', 'code_nature_culture_1_T', 'code_nature_culture_speciale_1_ALLEE', 'code_nature_culture_speciale_1_Aucun', 'code_nature_culture_speciale_1_CAMP', 'code_nature_culture_speciale_1_IMM', 'code_nature_culture_speciale_1_PACAG', 'code_nature_culture_speciale_1_POTAG', 'code_nature_culture_speciale_2_ACACI', 'code_nature_culture_speciale_2_AIRE', 'code_nature_culture_speciale_2_ALLEE', 'code_nature_culture_speciale_2_AULN', 'code_nature_culture_speciale_2_Aucun', 'code_nature_culture_speciale_2_CAMP', 'code_nature_culture_speciale_2_CANAL', 'code_nature_culture_speciale_2_CHEM', 'code_nature_culture_speciale_2_CHENE', 'code_nature_culture_speciale_2_FRICH', 'code_nature_culture_speciale_2_IMM', 'code_nature_culture_speciale_2_MARAI', 'code_nature_culture_speciale_2_PACAG', 'code_nature_culture_speciale_2_PAFEU', 'code_nature_culture_speciale_2_PATUR', 'code_nature_culture_speciale_2_PIN', 'code_nature_culture_speciale_2_POTAG', 'code_nature_culture_speciale_2_SABLE', 'code_nature_culture_speciale_2_VAOC', 'code_nature_culture_2_AB', 'code_nature_culture_2_AG', 'code_nature_culture_2_Aucun', 'code_nature_culture_2_B', 'code_nature_culture_2_BF', 'code_nature_culture_2_BR', 'code_nature_culture_2_BT', 'code_nature_culture_2_CA', 'code_nature_culture_2_E', 'code_nature_culture_2_J', 'code_nature_culture_2_L', 'code_nature_culture_2_P', 'code_nature_culture_2_PA', 'code_nature_culture_2_PC', 'code_nature_culture_2_S', 'code_nature_culture_2_T', 'code_nature_culture_2_VI', 'type_energie_chauffage_1_bois', 'type_energie_chauffage_1_charbon', 'type_energie_chauffage_1_electricite', 'type_energie_chauffage_1_fioul', 'type_energie_chauffage_1_gaz', 'type_energie_chauffage_1_gpl/butane/propane', 'type_energie_chauffage_1_reseau de chaleur', 'type_energie_chauffage_1_solaire', 'type_vitrage_1_brique de verre ou polycarbonate', 'type_vitrage_1_double vitrage', 'type_vitrage_1_simple vitrage', 'type_vitrage_1_survitrage', 'type_vitrage_1_triple vitrage']
-
 @st.cache_resource
 def try_load_model(path: str):
     p = Path(path)
@@ -31,22 +20,18 @@ def try_load_model(path: str):
         st.error("Impossible de charger le modèle. Vérifie le format (joblib/pickle) et les dépendances.")
         return None
 
-immo_bundle = try_load_model("./data/immo_bundle.pkl")
-print(immo_bundle)
+csv = pd.read_csv(f"./data/dvf2024.csv")
+csv = csv.rename(columns={
+    "PrixMoyen": "prix_moyen",
+    "Prixm2Moyen": "prix_m2_moyen",
+    "SurfaceMoy": "surface_moyenne"
+})
 
-## Constantes
-TARGET = "valeur_fonciere_1"
 # Binning
 NB_BINS_POI = 5
-NB_BINS_DELINQUENCE = 12
-COL_BINS_DELINQUENCE = ["delinquence"]
 NB_BINS_SURFACE = 24
 COL_BINS_SURFACE = ["surface_terrain_1"]
 
-# Outliers combinés
-COMBINED_OUTLIERS_COLS = ["surface_reelle_bati_1"]
-COMBINED_OUTLIERS_FLAGS = ("travaux", "premium")
-COMBINED_OUTLIERS_QUANTILES = (0.25, 0.75)
 # Encoding
 ENCODING_PARAMETERS = {
     "ordinal_variables" : [
@@ -82,45 +67,6 @@ ENCODING_PARAMETERS = {
         'code_commune_1'
     ]
 }
-# Feature selection
-NB_FEATURES = 50
-
-df_delinquence = pd.read_csv("./data/delinquence.csv")
-def base_delinquence(df5_final):
-    df_delinquence['nombre_final'] = df_delinquence['nombre'].fillna(df_delinquence['complement_info_nombre'])
-    df_delinquence['taux_pour_mille_final'] = df_delinquence['taux_pour_mille'].fillna(df_delinquence['complement_info_taux'])
-    df_delinquence['taux_pour_mille_final'] = df_delinquence['taux_pour_mille_final'].astype(str).str.replace(',', '.').astype(float)
-
-    # === Nettoyage des noms d’indicateurs (remplacement des caractères spéciaux)
-    remplacement_indicateurs = {
-        'Vols de véhicules': 'Vols de vehicules',
-        'Vols dans les véhicules': 'Vols dans les vehicules',
-        "Vols d'accessoires sur véhicules": "Vols d accessoires sur vehicules",
-        'Destructions et dégradations volontaires': 'Destructions et degradations volontaires',
-        'Usage de stupéfiants': 'Usage de stupefiants',
-        'Usage de stupéfiants (AFD)': 'Usage de stupefiants (AFD)',
-        'Trafic de stupéfiants': 'Trafic de stupefiants',
-        'Escroqueries': 'Escroqueries'
-    }
-    df_delinquence['indicateur'] = df_delinquence['indicateur'].replace(remplacement_indicateurs)
-    df_delinquence['CODGEO_2024'] = df_delinquence['CODGEO_2024'].astype(str)
-
-    # === Pivot : transforme les lignes d’indicateur en colonnes
-    df_pivot = df_delinquence.pivot_table(
-        index='CODGEO_2024',
-        columns='indicateur',
-        values='taux_pour_mille_final',
-        aggfunc='first'  # Si doublons (peu probable), garde la première valeur
-    )
-    # Fusion avec le dvf final
-
-    df5_final = df5_final.merge(
-        df_pivot,
-        how="left",
-        left_on="code_commune_1",
-        right_on="CODGEO_2024",
-    )
-    return df5_final
 
 df_etablissements = pd.read_csv("./data/categorie_bpe.csv", index_col=0)
 df_etablissements[['lat_rad', 'lon_rad']] = np.radians(df_etablissements[['LATITUDE', 'LONGITUDE']])
@@ -201,6 +147,14 @@ direct_copy = [
     "code_nature_culture_2"
 ]
 
+def clean_columns(df):
+    df.columns = (
+        df.columns.astype(str)
+        .str.replace(r'[^A-Za-z0-9_]+', '_', regex=True)
+        .str.strip('_')                                 
+    )
+    return df
+
 def geocode_ban(address: str, limit: int = 1):
     url = "https://api-adresse.data.gouv.fr/search/"
     params = {"q": address, "limit": limit}
@@ -250,16 +204,20 @@ def prixmoy(INSEE, X, csv):
     X = X | csv[["prix_moyen","prix_m2_moyen"]].to_dict(orient="records")[0]
     X["prix_theorique"] = X["surface_reelle_bati_1"] * X["prix_m2_moyen"]
     X["comparaison_marche"] = cmp(X["prix_theorique"], X["prix_moyen"])
-    X["prix_m2"] = X["prix_theorique"] / X["surface_reelle_bati_1"]
+    # X["prix_m2"] = X["prix_theorique"] / X["surface_reelle_bati_1"]
     return X
 
-def prepare_data(data):
+def prepare_data(data, bundle_type = "global"):
+    if "model_type" in data:
+        bundle_type = data["model_type"]
+
+    immo_bundle = try_load_model(f"./data/models/immo_bundle_{bundle_type}.pkl")
     X = {}
     for key in direct_copy:
         X[key] = data[key]
     X["terrain_1"] = 1 if (X["surface_terrain_1"] > 0 or X["surface_terrain_2"] > 0) else 0
     X["code_nature_culture_1"] = codes_nature_culture[data["code_nature_culture_1"]]
-    X["appartement"] = 1 if data["type_bien"] == "Appartement" else 0
+    #X["appartement"] = 1 if data["type_bien"] == "Appartement" else 0
     X["maison"] = 1 if data["type_bien"] == "Maison" else 0
     adresse = f"{data["adresse_num"]} {data["adresse_voie"]} {data["adresse_insee"]}"
     X = X | compter_etablissements_proches(adresse)
@@ -296,8 +254,8 @@ def prepare_data(data):
     df, nope = make_bins(df, df, ["nb_equipements_proches"], NB_BINS_SURFACE, strategy="uniform", encode="ordinal")
 
     price_data = csv["prix_m2_moyen"].describe(percentiles=(0.20,0.80))
-    df["travaux"] = df["prix_m2"] <= price_data["20%"]
-    df["premium"] = df["prix_m2"] >= price_data["80%"]
+    df["travaux"] = df["prix_m2_moyen"] <= price_data["20%"]
+    df["premium"] = df["prix_m2_moyen"] >= price_data["80%"]
 
     ordinal_variables = [col for col in ENCODING_PARAMETERS["ordinal_variables"] if col in df.columns]
     one_hot_variables = [col for col in ENCODING_PARAMETERS["one_hot_variables"] if col in df.columns]
@@ -315,15 +273,15 @@ def prepare_data(data):
         df = transform_target(immo_bundle["target_encoder"], df, cols_restantes)
 
 
-    cols = [c for c in all_cols if c not in list(df.columns)]
+    cols = [c for c in immo_bundle["scaler_columns"] if c not in list(df.columns)]
 
     for col in cols:
         df[col] = 0
 
-    df = df[all_cols]
+    df = df[immo_bundle["scaler_columns"]]
     
     print(list(df.columns))
-
+    
     df = pd.DataFrame(immo_bundle["scaler"].transform(df), columns = df.columns, index = df.index)
     df = df.drop(columns=cols)
     df = df.drop(df.filter(like="type_vitrage").columns, axis=1)
@@ -345,23 +303,19 @@ def prepare_data(data):
         if col not in df.columns:
             df[col] = 0
 
-    def clean_columns(df):
-        df.columns = (
-            df.columns.astype(str)
-            .str.replace(r'[^A-Za-z0-9_]+', '_', regex=True)
-            .str.strip('_')                                 
-        )
-        return df
+   
+    for col in immo_bundle["features"]:
+        if col not in list(df.columns):
+            df[col] = 0
 
+    for col in list(df.columns):
+        if col not in immo_bundle["features"]:
+            df = df.drop(columns=[col])
+
+    df = df[immo_bundle["features"]]
     df = clean_columns(df)
-    #ToDo fix
-    df['A_roport_moins_10km'] = 0
-    df['A_roport_pp_bin_ml'] = 0
-    print(df.columns)
-    cols = ['surface_reelle_bati_1', 'nombre_pieces_principales_1', 'surface_terrain_2', 'periode_construction_dpe_1', 'MED', 'Action_sociale_pour_enfants_en_bas_ge_moins_10km', 'A_roport_moins_10km', 'Commerces_alimentaires_moins_10km', 'D_chetterie_moins_10km', 'Grandes_surfaces_moins_10km', 'H_bergement_et_restauration_tudiants_moins_10km', 'Mairie_moins_10km', 'M_decins_g_n_ralistes_moins_10km', 'Param_dical_moins_10km', 'Parcs_moins_10km', 'Services_fun_raires_moins_10km', 'Sports_loisirs_et_culture_moins_10km', 'Sp_cialistes_M_dical_moins_10km', 'Station_service_moins_10km', 'Tourisme_moins_10km', 'Transports_en_commun_moins_10km', 'tablissements_et_services_de_sant__moins_10km', 'DPE_1', 'GES_1', 'terrain_1', 'appartement', 'maison', 'prix_moyen', 'prix_m2_moyen', 'surface_par_piece', 'prix_theorique', 'comparaison_marche', 'prix_m2', 'travaux', 'premium', 'Sports_loisirs_et_culture_pp_bin_ml', 'Commerces_alimentaires_pp_bin_ml', 'A_roport_pp_bin_ml', 'Trains_et_autres_transports_pp_bin_ml', 'Mairie_pp_bin_ml', 'D_chetterie_pp_bin_ml', 'surface_terrain_1_bin_ml', 'nb_equipements_proches_bin_ml', 'code_nature_culture_1_Aucun', 'code_nature_culture_1_S', 'code_nature_culture_2_Aucun', 'code_nature_culture_2_S', 'type_energie_chauffage_1_electricite', 'type_energie_chauffage_1_gaz', 'type_energie_chauffage_1_reseau_de_chaleur']
-    df = df[cols]
     model = immo_bundle["model"]
-    preds = model.predict(df)
+    preds =  model.predict(df)
     
-    st.success(f"Le bien est estimé à {preds[0]:,.0f}€")
+    return preds[0]
     
