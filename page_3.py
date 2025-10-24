@@ -80,11 +80,11 @@ def affiche():
         ]
 
         for item in data:
-            st.table({
-                "Modèle global" : f"Prix estimé à {prepare_data(item, "global"):,.0f}€",
-                "Modèle entraîné uniquement sur les maisons" : f"Prix estimé à {prepare_data(item, "maisons"):,.0f}€",
-                "Modèle entrainé uniquement sur les appartements" : f"Prix estimé à {prepare_data(item, "appartements"):,.0f}€"
-            })
+            st.markdown(f"""
+                - **Modèle global** : Prix estimé à {prepare_data(item, "global"):,.0f}€
+                - **Modèle entraîné uniquement sur les maisons** : Prix estimé à {prepare_data(item, "maisons"):,.0f}€
+                - **Modèle entrainé uniquement sur les appartements** : Prix estimé à {prepare_data(item, "appartements"):,.0f}€
+            """)
  
     # Déclenchement
     if submitted:
