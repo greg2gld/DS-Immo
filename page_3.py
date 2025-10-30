@@ -2,91 +2,684 @@
 code de la page
 
 """
-from tools import *
-from modelization import *
-from encode import *
-
 import streamlit as st
-from datetime import date, time, datetime
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import geopandas as gpd
+import plotly.express as px
+import json
+import os
+from tools import *
 
 def affiche():
-    st.title("Modélisation")
-    tab_immo, tab_compare  = st.tabs(["Prédiction immobilière", "Comparatif Modèles immobiliers"])
+    
 
-    with tab_immo:
-        st.header("Prédiction du prix d’un bien immobilier en Gironde")
-        with st.form("immo_form"):
-            st.subheader("Localisation")
-            col_numero, col_rue, col_insee = st.columns([0.1,0.7,0.2])
-            with col_numero:
-                numero = st.text_input("N°", key="adresse_num")
-            with col_rue:
-                rue = st.text_input("Nom et type de voie", key="adresse_voie", placeholder="Rue de.., Avenue de...")
-            with col_insee:
-                code_insee = st.selectbox(
-                    "Code INSEE", 
-                    ['33001', '33002', '33003', '33004', '33005', '33006', '33007', '33008', '33009', '33010', '33011', '33012', '33013', '33014', '33015', '33017', '33018', '33019', '33021', '33022', '33023', '33024', '33025', '33026', '33027', '33028', '33029', '33030', '33032', '33033', '33034', '33035', '33036', '33037', '33038', '33039', '33040', '33042', '33043', '33044', '33045', '33046', '33047', '33048', '33049', '33050', '33051', '33052', '33054', '33055', '33056', '33057', '33058', '33060', '33061', '33062', '33063', '33065', '33067', '33068', '33069', '33070', '33071', '33072', '33073', '33075', '33076', '33077', '33078', '33079', '33080', '33081', '33082', '33083', '33084', '33085', '33086', '33087', '33088', '33089', '33090', '33093', '33094', '33095', '33096', '33097', '33098', '33099', '33100', '33101', '33102', '33104', '33105', '33106', '33108', '33109', '33111', '33112', '33113', '33114', '33115', '33116', '33117', '33118', '33119', '33120', '33121', '33122', '33123', '33124', '33125', '33126', '33127', '33128', '33129', '33130', '33131', '33132', '33134', '33135', '33136', '33137', '33138', '33139', '33140', '33141', '33142', '33143', '33144', '33145', '33146', '33147', '33148', '33149', '33150', '33151', '33152', '33153', '33154', '33157', '33158', '33159', '33160', '33161', '33162', '33163', '33164', '33165', '33166', '33167', '33168', '33169', '33170', '33171', '33172', '33173', '33174', '33175', '33176', '33177', '33178', '33179', '33181', '33182', '33183', '33184', '33185', '33186', '33187', '33188', '33189', '33190', '33191', '33192', '33193', '33194', '33195', '33196', '33197', '33198', '33199', '33200', '33201', '33202', '33203', '33204', '33205', '33206', '33207', '33208', '33209', '33210', '33211', '33212', '33213', '33214', '33215', '33216', '33218', '33219', '33220', '33221', '33222', '33223', '33225', '33226', '33227', '33228', '33229', '33230', '33232', '33233', '33234', '33235', '33236', '33237', '33238', '33239', '33240', '33241', '33242', '33243', '33244', '33245', '33246', '33248', '33249', '33250', '33251', '33252', '33253', '33254', '33255', '33256', '33257', '33258', '33259', '33260', '33261', '33262', '33263', '33264', '33266', '33268', '33269', '33270', '33271', '33272', '33273', '33274', '33275', '33276', '33279', '33280', '33281', '33282', '33283', '33284', '33285', '33287', '33288', '33289', '33290', '33293', '33294', '33296', '33297', '33298', '33299', '33300', '33301', '33302', '33303', '33304', '33305', '33306', '33307', '33308', '33309', '33310', '33311', '33312', '33314', '33315', '33316', '33317', '33318', '33319', '33320', '33321', '33322', '33323', '33324', '33325', '33326', '33327', '33328', '33329', '33330', '33331', '33332', '33333', '33334', '33335', '33336', '33337', '33339', '33341', '33342', '33343', '33344', '33345', '33346', '33347', '33348', '33349', '33350', '33351', '33352', '33353', '33354', '33355', '33356', '33357', '33358', '33360', '33361', '33362', '33363', '33364', '33366', '33367', '33369', '33370', '33372', '33373', '33374', '33375', '33376', '33377', '33378', '33379', '33380', '33381', '33382', '33383', '33384', '33385', '33386', '33387', '33388', '33389', '33390', '33391', '33392', '33393', '33394', '33395', '33396', '33397', '33399', '33400', '33401', '33402', '33404', '33405', '33406', '33407', '33408', '33411', '33412', '33413', '33414', '33415', '33416', '33417', '33418', '33421', '33422', '33423', '33424', '33425', '33426', '33427', '33428', '33429', '33431', '33432', '33433', '33434', '33435', '33436', '33437', '33438', '33439', '33441', '33442', '33443', '33444', '33445', '33447', '33448', '33449', '33450', '33451', '33452', '33453', '33454', '33456', '33457', '33458', '33459', '33460', '33461', '33462', '33463', '33464', '33465', '33466', '33467', '33468', '33470', '33471', '33472', '33473', '33474', '33476', '33477', '33478', '33480', '33481', '33482', '33483', '33484', '33485', '33486', '33487', '33488', '33489', '33490', '33491', '33492', '33493', '33494', '33496', '33498', '33499', '33500', '33501', '33502', '33503', '33504', '33505', '33506', '33507', '33508', '33509', '33511', '33512', '33513', '33514', '33515', '33516', '33517', '33518', '33519', '33520', '33521', '33522', '33523', '33524', '33525', '33527', '33528', '33529', '33530', '33531', '33532', '33533', '33534', '33535', '33536', '33537', '33538', '33539', '33540', '33541', '33542', '33543', '33544', '33545', '33546', '33547', '33548', '33549', '33550', '33551', '33552', '33553', '33554', '33555'], 
-                    key="adresse_insee",
-                    index=0
+    from pathlib import Path
+
+    # --------------------------------------------------
+    # ⚙️ Configuration de la page
+    # --------------------------------------------------
+    st.set_page_config(page_title="Sunburst enrichi - Gironde", layout="wide")
+    st.title("Datavisualisation de la base des ventes immobilières au sein de la Gironde")
+    tab1, tab2 = st.tabs(["📚 Visualisation globale de la base", "🔎 Exploration détaillée"])
+
+    # --------------------------------------------------
+    # 📥 Chargement et préparation des données
+    # --------------------------------------------------
+
+    def load_main_data(path):
+        df = pd.read_csv(path, low_memory=False)
+        df = df.dropna(subset=["code_commune_1", "type_bien", "nombre_pieces_principales_1", "DPE_1"])
+        df["code_commune_1"] = df["code_commune_1"].astype(str).str.zfill(5)
+
+        # Normalisation types et valeurs numériques
+        df["valeur_fonciere_1"] = df["valeur_fonciere_1"].astype(str).str.replace(",", ".", regex=False)
+        df["valeur_fonciere_1"] = pd.to_numeric(df["valeur_fonciere_1"], errors="coerce").fillna(0.0)
+        df["surface_terrain_1"] = pd.to_numeric(df["surface_terrain_1"], errors="coerce").fillna(0.0)
+
+        # Catégorisation : présence de terrain
+        df["presence_terrain"] = np.where(df["surface_terrain_1"] > 0, "Avec terrain", "Sans terrain")
+
+        # Types de locaux explicites
+        df["code_type_local_1"] = df["code_type_local_1"].replace({
+            1.0: "Maisons",
+            2.0: "Appartements"
+        }).fillna("Autre")
+
+        # Normalisation DPE
+        df["DPE_1"] = df["DPE_1"].astype(str).str.upper().replace({"NAN": "Non renseigné"})
+
+        return df
+
+
+    df_main = load_main_data("data/Cyrielle/df_ok_nan_adresse_POItot.csv")
+
+
+    # --------------------------------------------------
+    # 🧮 Agrégation des données (option 1 : count size)
+    # --------------------------------------------------
+    group_cols = [
+        "nom_commune_1",
+        "code_commune_1",
+        "code_type_local_1",
+        "presence_terrain",
+        "nombre_pieces_principales_1",
+        "DPE_1"
+    ]
+
+    df_sunburst = (
+        df_main.groupby(group_cols, dropna=False)
+        .agg(
+            nb_mutations=("id_mutation", "size"),  # ✅ chaque ligne = 1 mutation
+            valeur_totale=("valeur_fonciere_1", "sum")
+        )
+        .reset_index()
+    )
+
+    df_sunburst["nb_mutations"] = df_sunburst["nb_mutations"].astype(int)
+    df_sunburst["DPE_label"] = "DPE : " + df_sunburst["DPE_1"].astype(str)
+    df_sunburst["Pieces_label"] = "Pièces : " + df_sunburst["nombre_pieces_principales_1"].astype(str)
+
+  
+    # --------------------------------------------------
+    # 🌇 Sunburst Bordeaux vs Autres communes
+    # --------------------------------------------------
+
+    with tab1:
+        col1, col2 = st.columns(2)
+
+        palette_bdx = ["#5E0B15", "#8B1E3F", "#A93C6E", "#C76D99", "#E89BB8", "#F2C4D3"]
+        palette_autres = ["#003049", "#126782", "#468FAF", "#7FB3C8", "#A9CFE0", "#D1E7F0"]
+        palette_sel = ["#14532D", "#1E6F3F", "#278C54", "#4FAE73", "#7FC896", "#A8E0B7"]
+
+        with col1:
+            df_bordeaux = df_sunburst[df_sunburst["code_commune_1"] == "33063"]
+            if not df_bordeaux.empty:
+                fig_bdx = px.sunburst(
+                    df_bordeaux,
+                    path=[
+                        "nom_commune_1",
+                        "code_type_local_1",
+                        "presence_terrain",
+                        "Pieces_label",
+                        "DPE_1"
+                    ],
+                    values="nb_mutations",
+                    color="code_type_local_1",
+                    color_discrete_sequence=palette_bdx,
+                    title="🏙️ Bordeaux — Nombre de mutations",
+                    width=500,
+                    height=500,
+                    hover_data={
+                        "nb_mutations": True,
+                        "valeur_totale": False,
+                        "code_type_local_1": False,
+                        "presence_terrain": False,
+                        "Pieces_label": False,
+                        "DPE_label": False
+                    }                
+                )
+                fig_bdx.update_layout(height=700)
+                st.plotly_chart(fig_bdx, use_container_width=True)
+            else:
+                st.warning("Aucune donnée trouvée pour Bordeaux (33063).")
+
+        with col2:
+            df_autres = df_sunburst[df_sunburst["code_commune_1"] != "33063"]
+            if not df_autres.empty:
+                fig_autres = px.sunburst(
+                    df_autres,
+                    path=["code_type_local_1", "presence_terrain", "Pieces_label", "DPE_1"],
+                    values="nb_mutations",
+                    color="code_type_local_1",
+                    color_discrete_sequence=palette_autres,
+                    title="🌍 Autres communes — Répartition des mutations",
+                    width=500,
+                    height=500,
+                    hover_data={
+                        "nb_mutations": True,
+                        "valeur_totale": False,
+                        "code_type_local_1": False,
+                        "presence_terrain": False,
+                        "Pieces_label": False,
+                        "DPE_label": False
+                    }                      
+                )
+                fig_autres.update_layout(height=700)
+                st.plotly_chart(fig_autres, use_container_width=True)
+            else:
+                st.warning("Aucune donnée disponible pour les autres communes.")
+
+
+        # --------------------------------------------------
+        # 🧭 Sélecteur : Sunburst par commune
+        # --------------------------------------------------
+        st.markdown("---")
+        st.subheader("🔍 Visualisation par commune")
+
+        communes = sorted(df_sunburst["nom_commune_1"].dropna().unique())
+        commune_sel = st.selectbox("Choisir une commune :", communes, index=0)
+
+        df_commune = df_sunburst[df_sunburst["nom_commune_1"] == commune_sel]
+
+        if df_commune.empty:
+            st.warning("Aucune donnée disponible pour cette commune.")
+        else:
+            fig_commune = px.sunburst(
+                df_commune,
+                path=[
+                    "nom_commune_1",
+                    "code_type_local_1",
+                    "presence_terrain",
+                    "Pieces_label",
+                    "DPE_1"
+                ],
+                values="nb_mutations",
+                color="code_type_local_1",
+                color_discrete_sequence=palette_sel,
+                title=f"Structure des ventes à {commune_sel}",
+                width=800,
+                height=700,
+                    hover_data={
+                        "nb_mutations": True,
+                        "valeur_totale": False,
+                        "code_type_local_1": False,
+                        "presence_terrain": False,
+                        "Pieces_label": False,
+                        "DPE_label": False
+                    }                  
+            )
+            st.plotly_chart(fig_commune, use_container_width=True)
+        
+    
+    with tab2:
+    
+        # ================================
+        # --- Page 2 : Illustrations
+        # ================================
+        def page2_visualisations():
+
+            # Chargement des données
+            df = pd.read_csv("data/Cyrielle/df_ok_nan_adresse_POItot.csv", index_col=0)
+            df = df.drop(columns=["Unnamed: 0"], errors="ignore")
+
+            tab1, tab2 = st.tabs(["📊 Visualisations principales", "🗺️ Cartes et analyses géographiques"])
+
+            # ============================================================
+            # --- TAB 1 : VISUALISATIONS PRINCIPALES
+            # ============================================================
+            with tab1:
+                st.header("📈 Distribution et caractéristiques des ventes")
+
+
+                col1, col2 = st.columns(2)
+                # Histogramme
+                with col1:
+                    st.subheader("Distribution des valeurs foncières")
+                    fig1, ax1 = plt.subplots(figsize=(5, 3))
+                    sns.histplot(df['valeur_fonciere_1'], bins=100, kde=True, ax=ax1)
+                    
+                    # Titres et labels plus petits
+                    ax1.set_title("Distribution des valeurs foncières", fontsize=8)
+                    ax1.set_xlabel("Valeur foncière (€)", fontsize=6)
+                    ax1.set_ylabel("Nombre de ventes", fontsize=6)
+                    
+                    # Taille des ticks (graduations)
+                    ax1.tick_params(axis='x', labelsize=6)
+                    ax1.tick_params(axis='y', labelsize=6)
+                    fig1.tight_layout()
+                    st.pyplot(fig1)
+
+                with col2:                
+
+                # Histogramme coloré par type de bien
+                    st.subheader("Distribution des prix selon le type de bien")
+                    if "type_bien" in df.columns:
+                        fig3, ax3 = plt.subplots(figsize=(5, 3))
+                        sns.histplot(
+                            data=df,
+                            x="valeur_fonciere_1",
+                            bins=50,
+                            hue="type_bien",
+                            palette={"Maison": "orange", "Appartement": "blue"},
+                            ax=ax3
+                        )
+                        ax3.set_title("Distribution des prix selon le type de bien", fontsize=8)
+                        ax3.set_xlabel("Valeur foncière (€)", fontsize=6)
+                        ax3.set_ylabel("Nombre de transactions", fontsize=6)
+                        ax3.tick_params(axis='x', labelsize=6)
+                        ax3.tick_params(axis='y', labelsize=6)
+                        ax3.get_legend().remove()
+
+                        import matplotlib.patches as mpatches
+                        legendes = [
+                            mpatches.Patch(color="orange", label="Maisons"),
+                            mpatches.Patch(color="blue", label="Appartements")
+                        ]
+                        ax3.legend(
+                            handles=legendes,
+                            title="Type de bien immobilier",
+                            title_fontsize=6,
+                            fontsize=5,
+                            loc="upper right",
+                            frameon=False
+                        )
+
+                        fig3.tight_layout()
+                        st.pyplot(fig3)
+                    st.divider()
+
+                col1, col2 = st.columns(2)
+                # Boxplot par type de bien 
+                with col1:                   
+                    st.subheader("Valeur foncière par type de bien")
+
+                    # On définit une palette cohérente avec les autres graphiques
+                    palette = {"Maison": "orange", "Appartement": "blue"}
+
+                    # On s'assure que les valeurs sont bien écrites comme attendu
+                    df_plot = df.copy()
+                    df_plot["type_bien"] = df_plot["type_bien"].str.strip().str.capitalize()
+
+                    fig2, ax2 = plt.subplots(figsize=(5, 3))
+                    sns.boxplot(
+                        data=df_plot,
+                        y="type_bien",
+                        x="valeur_fonciere_1",
+                        hue="type_bien",          # 👈 pour colorer selon le type de bien
+                        palette=palette,          # 👈 couleurs cohérentes
+                        dodge=False,              # 👈 un seul box par catégorie
+                        ax=ax2
+                    )
+
+                    # Nettoyage et ajustement
+                    ax2.set_title("Valeur foncière par type de bien", fontsize=8)
+                    ax2.set_ylabel("Type de bien", fontsize=6)
+                    ax2.set_xlabel("Valeur foncière (€)", fontsize=6)
+                    ax2.tick_params(axis='x', labelsize=6)
+                    ax2.tick_params(axis='y', labelsize=6)
+
+                    fig2.tight_layout()
+                    st.pyplot(fig2)
+
+                col1, col2 = st.columns(2)
+
+                # Répartition DPE
+                with col1:
+                    st.subheader("Répartition des transactions par classe DPE et GES")
+                    dpe_counts = df["DPE_1"].value_counts().reindex(list("ABCDEFG"))
+                    fig4, ax4 = plt.subplots(figsize=(6, 4))
+                    dpe_counts.plot(kind="bar", color="skyblue", edgecolor="black", ax=ax4)
+                    ax4.set_xlabel("Classe DPE")
+                    ax4.set_ylabel("Nombre de transactions")
+                    ax4.set_title("Répartition des transactions par classe DPE")
+                    st.pyplot(fig4)
+
+                # Répartition GES
+                with col2:
+                    st.subheader("")
+                    ges_counts = df["GES_1"].value_counts().reindex(list("ABCDEFG"))
+                    fig5, ax5 = plt.subplots(figsize=(6, 4))
+                    ges_counts.plot(kind="bar", color="lightcoral", edgecolor="black", ax=ax5)
+                    ax5.set_xlabel("Classe GES")
+                    ax5.set_ylabel("Nombre de transactions")
+                    ax5.set_title("Répartition des transactions par classe GES")
+                    st.pyplot(fig5)
+
+                # Boxplots DPE et GES
+                st.subheader("Valeur foncière selon DPE et GES")
+                col1, col2 = st.columns(2)
+
+                with col1:
+                    fig6, ax6 = plt.subplots(figsize=(6, 4))
+                    sns.boxplot(x="DPE_1", y="valeur_fonciere_1", data=df,
+                                order=list("ABCDEFG"), palette="Blues", ax=ax6)
+                    ax6.set_title("Valeur foncière par classe DPE")
+                    st.pyplot(fig6)
+
+                with col2:
+                    fig7, ax7 = plt.subplots(figsize=(6, 4))
+                    sns.boxplot(x="GES_1", y="valeur_fonciere_1", data=df,
+                                order=list("ABCDEFG"), palette="Reds", ax=ax7)
+                    ax7.set_title("Valeur foncière par classe GES")
+                    st.pyplot(fig7)
+
+
+                col1, col2 = st.columns(2)
+
+                with col1:
+                    # Tableau croisé DPE / GES
+                    st.subheader("Croisement des classes DPE et GES")
+                    table_dpe_ges = pd.crosstab(df["DPE_1"], df["GES_1"]).reindex(index=list("ABCDEFG"), columns=list("ABCDEFG"))
+                    fig8, ax8 = plt.subplots(figsize=(8, 6))
+                    sns.heatmap(table_dpe_ges, annot=True, fmt="d", cmap="YlGnBu", ax=ax8)
+                    ax8.set_title("Croisement des classes DPE et GES")
+                    st.pyplot(fig8)
+
+                    st.divider()
+
+
+                col1, col2 = st.columns(2)
+
+                with col1:
+                    # POI Heatmap
+                    st.subheader("Accessibilité des biens par catégorie et distance")
+                    categories = {
+                        "Santé": ["Médecins généralistes", "Paramédical", "Spécialistes – Médical", "Établissements et services de santé"],
+                        "Éducation": ["Écoles, collèges, lycées", "Enseignement supérieur", "Formation continue"],
+                        "Commerces": ["Commerces alimentaires", "Grandes surfaces", "Station-service"],
+                        "Transports": ["Transports en commun", "Trains et autres transports", "Aéroport"],
+                        "Loisirs": ["Parcs", "Sports, loisirs et culture", "Tourisme", "Patrimoine"],
+                        "Services publics": ["Mairie", "Police et Gendarmerie", "Déchetterie", "Services funéraires"]
+                    }
+
+                    res = []
+                    for cat, poi_list in categories.items():
+                        for dist in ["50m", "500m", "2km", "10km"]:
+                            cols = [f"{poi}_moins_{dist}" for poi in poi_list if f"{poi}_moins_{dist}" in df.columns]
+                            if cols:
+                                nb = (df[cols].sum(axis=1) > 0).sum()
+                                res.append([cat, dist, nb])
+
+                    if res:
+                        heatmap_df = pd.DataFrame(res, columns=["Categorie", "Distance", "Nb_biens"])
+                        pivot = heatmap_df.pivot(index="Categorie", columns="Distance", values="Nb_biens")
+
+                        fig9, ax9 = plt.subplots(figsize=(6, 4))
+                        sns.heatmap(pivot, annot=True, fmt="d", cmap="YlGnBu", ax=ax9)
+                        ax9.set_title("Accessibilité des biens par catégorie de services et distances")
+                        st.pyplot(fig9)
+
+            # ============================================================
+            # --- TAB 2 : CARTES
+            # ============================================================
+            with tab2:
+                st.header("🗺️ Cartographie des ventes immobilières")
+
+                # Carte interactive des ventes
+                st.subheader("Localisation des ventes et valeur foncière")
+                fig_map = px.scatter_mapbox(
+                    df,
+                    lat="latitude_1",
+                    lon="longitude_1",
+                    color="valeur_fonciere_1",
+                    size="surface_reelle_bati_1",
+                    hover_name="adresse_complete_1",
+                    color_continuous_scale=px.colors.sequential.Viridis,
+                    zoom=9,
+                    mapbox_style="open-street-map",
+                    title="Localisation des biens et valeur foncière"
+                )
+                st.plotly_chart(fig_map, use_container_width=True)
+
+                # --- Choropleth Gironde
+                st.subheader("Nombre de ventes immobilières par commune")
+                shapefile_path = os.path.join(
+                    "..", "..", "data", "staging", "shapefiles", "communes_gironde.shp"
                 )
 
-            st.subheader("Caractéristiques du bien")
-            col_type, col_nbpieces, col_surface = st.columns([0.4,0.3,0.3])
-            with col_type:
-                type_bien = st.radio("Type de bien", key="type_bien", options=["Appartement", "Maison"], horizontal=True)
-            with col_nbpieces:
-                nombre_pieces_principales_1 = st.number_input("Nombre de pièces", key="nombre_pieces_principales_1", min_value=0, value=3, step=1)
-            with col_surface:
-                surface_reelle_bati_1 = st.number_input("Surface du bien (m²)", key="surface_reelle_bati_1", min_value=0.0, value=60.0, step=0.5)
+                if os.path.exists(shapefile_path):
+                    gironde = gpd.read_file(shapefile_path)
+                    if gironde.crs.to_epsg() != 4326:
+                        gironde = gironde.to_crs(epsg=4326)
 
-            st.subheader("Caractéristiques énergétiques")
-            # DPE / GES (catégories A–G typiquement)
-            c3, c4 = st.columns(2)
-            with c3:
-                periode_construction_dpe_1 = st.selectbox(
-                    "Periode de construction",  
-                    ["avant 1948","1948-1974","1975-1977","1978-1982","1983-1988","1989-2000","2001-2005","2006-2012","2013-2021","après 2021"],
-                    key="periode_construction_dpe_1",
-                    index=0
-                )
-                DPE_1 = st.selectbox("Diagnostic de performance énergétique", list("ABCDEFG"), key="DPE_1")
+                    gironde["INSEE_COM"] = gironde["INSEE_COM"].astype(str)
+                    ventes_par_commune = (
+                        df["code_commune_1"].astype(str).value_counts().reset_index()
+                    )
+                    ventes_par_commune.columns = ["code_commune_1", "nb_ventes"]
+                    gironde = gironde.merge(
+                        ventes_par_commune,
+                        left_on="INSEE_COM",
+                        right_on="code_commune_1",
+                        how="left"
+                    )
+                    gironde["nb_ventes"] = gironde["nb_ventes"].fillna(0)
+                    gironde["nb_ventes_log"] = np.log1p(gironde["nb_ventes"])
 
-            with c4:
-                GES_1 = st.selectbox("Gaz à effet de serre", list("ABCDEFG"), key="GES_1")
-                type_energie_chauffage_1 = st.selectbox("Type de chauffage", ['gaz', 'electricite', 'reseau de chaleur', 'bois', 'fioul',
-        'gpl/butane/propane', 'solaire', 'charbon'], key="type_energie_chauffage_1")
-                
-            st.subheader("Caractéristiques du terrain")
-            
-            col_surface_1, col_surface_2 = st.columns(2)
-            
-            with col_surface_1:
-                surface_terrain_1 = st.number_input("Surface terrain principal", key="surface_terrain_1", min_value=0.0, value=0.0, step=1.0)
-                surface_terrain_2 = st.number_input("Surface autre terrains", key="surface_terrain_2", min_value=0.0, value=0.0, step=1.0)
-            with col_surface_2:
-                code_nature_culture_1 = st.selectbox("Nature terrain principal", codes_nature_culture.keys(), key="code_nature_culture_1")
-                code_nature_culture_2 = st.selectbox("Nature autres terrains", codes_nature_culture.keys(), key="code_nature_culture_2")
+                    geojson_gironde = json.loads(gironde.to_json())
+                    ticks = [0, 10, 100, 1000, 5000]
+                    tickvals = np.log1p(ticks)
+                    ticktext = [str(v) for v in ticks]
 
-            model_type = st.selectbox("Type de modèle (Global, entraîné sur des maisons uniquement ou sur des appartements uniquement)", ["global", "appartements", "maisons"], key="model_type", index=0)
-            submitted = st.form_submit_button("Prédire")
-    with tab_compare:
-        st.header("Comparatif de modèles immobiliers")
-        data = [
-            {'GES_1': 'A', 'FormSubmitter:immo_form-Prédire': True, 'periode_construction_dpe_1': 'avant 1948', 'type_bien': 'Appartement', 'type_energie_chauffage_1': 'gaz', 'code_nature_culture_2': 'Aucun', 'nombre_pieces_principales_1': 3, 'surface_terrain_1': 0.0, 'adresse_insee': '33001', 'surface_reelle_bati_1': 60.0, 'DPE_1': 'A', 'surface_terrain_2': 0.0, 'adresse_num': '18', 'adresse_voie': 'Avenue de Foncastel', 'code_nature_culture_1': 'Aucun'},
-            {'GES_1': 'A', 'FormSubmitter:immo_form-Prédire': True, 'periode_construction_dpe_1': 'avant 1948', 'type_bien': 'Appartement', 'type_energie_chauffage_1': 'gaz', 'code_nature_culture_2': 'Aucun', 'nombre_pieces_principales_1': 3, 'surface_terrain_1': 0.0, 'adresse_insee': '33001', 'surface_reelle_bati_1': 60.0, 'DPE_1': 'A', 'surface_terrain_2': 0.0, 'adresse_num': '18', 'adresse_voie': 'Avenue de Foncastel', 'code_nature_culture_1': 'Aucun'},
-            {'GES_1': 'A', 'FormSubmitter:immo_form-Prédire': True, 'periode_construction_dpe_1': 'avant 1948', 'type_bien': 'Appartement', 'type_energie_chauffage_1': 'gaz', 'code_nature_culture_2': 'Aucun', 'nombre_pieces_principales_1': 3, 'surface_terrain_1': 0.0, 'adresse_insee': '33001', 'surface_reelle_bati_1': 60.0, 'DPE_1': 'A', 'surface_terrain_2': 0.0, 'adresse_num': '18', 'adresse_voie': 'Avenue de Foncastel', 'code_nature_culture_1': 'Aucun'},
-            {'GES_1': 'A', 'FormSubmitter:immo_form-Prédire': True, 'periode_construction_dpe_1': 'avant 1948', 'type_bien': 'Appartement', 'type_energie_chauffage_1': 'gaz', 'code_nature_culture_2': 'Aucun', 'nombre_pieces_principales_1': 3, 'surface_terrain_1': 0.0, 'adresse_insee': '33001', 'surface_reelle_bati_1': 60.0, 'DPE_1': 'A', 'surface_terrain_2': 0.0, 'adresse_num': '18', 'adresse_voie': 'Avenue de Foncastel', 'code_nature_culture_1': 'Aucun'},
-            {'GES_1': 'A', 'FormSubmitter:immo_form-Prédire': True, 'periode_construction_dpe_1': 'avant 1948', 'type_bien': 'Appartement', 'type_energie_chauffage_1': 'gaz', 'code_nature_culture_2': 'Aucun', 'nombre_pieces_principales_1': 3, 'surface_terrain_1': 0.0, 'adresse_insee': '33001', 'surface_reelle_bati_1': 60.0, 'DPE_1': 'A', 'surface_terrain_2': 0.0, 'adresse_num': '18', 'adresse_voie': 'Avenue de Foncastel', 'code_nature_culture_1': 'Aucun'}
-        ]
+                    fig_choro = px.choropleth_mapbox(
+                        gironde,
+                        geojson=geojson_gironde,
+                        locations="INSEE_COM",
+                        color="nb_ventes_log",
+                        hover_name="NOM",
+                        hover_data={"nb_ventes": True, "nb_ventes_log": False},
+                        color_continuous_scale="Oranges",
+                        mapbox_style="carto-positron",
+                        zoom=8,
+                        center={"lat": 44.84, "lon": -0.58},
+                        height=1200,
+                        title="Nombre de ventes immobilières par commune"
+                    )
+                    fig_choro.update_coloraxes(
+                        colorbar_tickvals=tickvals,
+                        colorbar_ticktext=ticktext,
+                        colorbar_title="Nb ventes"
+                    )
 
-        for item in data:
-            st.markdown(f"""
-                - **Modèle global** : Prix estimé à {prepare_data(item, "global"):,.0f}€
-                - **Modèle entraîné uniquement sur les maisons** : Prix estimé à {prepare_data(item, "maisons"):,.0f}€
-                - **Modèle entrainé uniquement sur les appartements** : Prix estimé à {prepare_data(item, "appartements"):,.0f}€
-            """)
- 
-    # Déclenchement
-    if submitted:
-        prix = prepare_data(st.session_state)
-        st.success(f"Le bien est estimé à {prix:,.0f}€ avec le modele {st.session_state["model_type"]}")
+                    fig_choro.update_layout(
+                        height=1200,  # 👈 hauteur forcée
+                        margin=dict(l=0, r=0, t=30, b=0)
+                    )
+
+                    st.plotly_chart(fig_choro, use_container_width=True, height=1200)
+
+                # --- Top 20 communes
+                st.subheader("Top 20 des communes avec le plus de ventes")
+                col1, col2 = st.columns([2, 1])
+
+                with col1:
+                    top_communes = df["nom_commune_1"].value_counts().head(20)
+                    fig10, ax10 = plt.subplots(figsize=(10, 5))
+                    sns.barplot(
+                        x=top_communes.values,
+                        y=top_communes.index,
+                        ax=ax10,
+                        palette=sns.color_palette("viridis", n_colors=len(top_communes))  # 👈 une couleur par barre
+                    )
+                    ax10.set_title("Top 20 des communes avec le plus de transactions")
+                    ax10.set_xlabel("Nombre de transactions")
+                    ax10.set_ylabel("Commune")
+                    st.pyplot(fig10)
+
+
+        # --- Appel principal
+        st.set_page_config(page_title="Exploration et Cartographie", layout="wide")
+        page2_visualisations()
+
+    
+        # # --------------------------------------------------
+        # # 🧩 Chargement des données
+        # # --------------------------------------------------
+        # @st.cache_data
+        # def load_main_data(path):
+        #     df = pd.read_csv(path, low_memory=False)
+        #     df = df.dropna(subset=["code_commune_1", "type_bien"])
+        #     df["code_commune_1"] = df["code_commune_1"].astype(str).str.zfill(5)
+        #     return df
+
+        # @st.cache_data
+        # def load_dvf_data(folder_path):
+        #     """Charge et concatène les fichiers dvf2020.csv à dvf2024.csv pour la Gironde (INSEE_COM commençant par '33')."""
+        #     dfs = []
+        #     for year in range(2020, 2025):
+        #         file_path = Path(folder_path) / ("dvf" + str(year) + ".csv")
+        #         if file_path.exists():
+        #             df_y = pd.read_csv(file_path, low_memory=False)
+        #             # Vérification de la présence du code INSEE
+        #             if "INSEE_COM" in df_y.columns:
+        #                 df_y["INSEE_COM"] = df_y["INSEE_COM"].astype(str).str.zfill(5)
+        #                 # Filtre sur la Gironde (codes commençant par 33)
+        #                 df_y = df_y[df_y["INSEE_COM"].str.startswith("33")]
+        #             else:
+        #                 st.warning("⚠️ Colonne INSEE_COM absente dans " + str(file_path))
+        #                 continue
+
+        #         # Ajout de l’année si absente
+        #             if "Annee" not in df_y.columns:
+        #                 df_y["Annee"] = year
+        #             dfs.append(df_y)
+        #         else:
+        #             st.warning("❌ Fichier introuvable : " + str(file_path))
+
+        #     if len(dfs) == 0:
+        #         st.warning("⚠️ Aucun fichier DVF trouvé dans le dossier : " + str(folder_path))
+        #         return pd.DataFrame()
+
+        #     # Concaténation sans moyenne
+        #     df_all = pd.concat(dfs, ignore_index=True)
+        #     return df_all
+
+        # # Chargement effectif
+        # df_main = load_main_data("data/Cyrielle/df_ok_nan_adresse_POItot.csv")
+        # df_dvf = load_dvf_data("data/Cyrielle")
+
+        # print("Type de df_main :", type(df_main))
+        # print("Type de df_dvf :", type(df_dvf))
+
+        # # --------------------------------------------------
+        # # 🔄 Fusion DVF + base principale via codes INSEE
+        # # --------------------------------------------------
+        # df_merge = pd.merge(
+        #         df_main,
+        #         df_dvf,
+        #         left_on="code_commune_1",
+        #         right_on="INSEE_COM",
+        #         how="left")
+
+        # # Normalisation des champs
+        # df_merge["type_bien"] = df_merge["type_bien"].fillna("Inconnu")
+        # df_merge["DPE_1"] = df_merge["DPE_1"].fillna("NC")
+        # df_merge["GES_1"] = df_merge["GES_1"].fillna("NC")
+
+        # # Agrégation
+        # df_sunburst = (
+        #     df_merge.groupby(["Annee", "INSEE_COM", "type_bien", "DPE_1", "GES_1"], as_index=False)
+        #     .agg({
+        #         "Nb_mutations": "count",
+        #         "PrixMoyen": "mean",
+        #         "Prixm2Moyen": "mean",
+        #         "dens_pop": "mean"
+        #     })
+        # )
+
+        # annees_dispo = sorted(df_sunburst["Annee"].dropna().unique())
+        # annee_sel = st.selectbox("🗓️ Sélectionnez une année pour les statiustiques de vente :", annees_dispo)
+        # df_year = df_sunburst[df_sunburst["Annee"] == annee_sel]
+
+        # fig = px.sunburst(
+        #     df_year,
+        #     path=["INSEE_COM", "type_bien", "DPE_1", "GES_1"],
+        #     values="Nb_mutations",
+        #     color="Prixm2Moyen",
+        #     color_continuous_scale="YlGnBu",
+        #     hover_data={
+        #         "dens_pop": True,
+        #         "PrixMoyen": ":,.0f",
+        #         "Prixm2Moyen": ":,.0f",
+        #         "Nb_mutations": ":,.0f",
+        #         "Annee": True
+        #     },
+        #     title="🌞 Répartition des transactions par commune, type de bien, DPE et GES - " + str(annee_sel)
+        # )
+
+        # fig.update_layout(
+        #     margin=dict(t=60, l=0, r=0, b=0),
+        #     coloraxis_colorbar=dict(title="Prix moyen au m² (€)"),
+        # )
+        # st.plotly_chart(fig, use_container_width=True)
+
+
+
+        # # --------------------------------------------------
+        # # 🎛️ Paramètres utilisateur
+        # # --------------------------------------------------
+        # st.sidebar.header("🧭 Paramètres du graphique")
+
+        # metric = st.sidebar.selectbox(
+        #     "Valeur à représenter :",
+        #     ["Nombre de ventes", "Valeur foncière totale"]
+        # )
+
+        # levels = st.sidebar.multiselect(
+        #     "Choisis les niveaux hiérarchiques du sunburst :",
+        #     options=[
+        #         "nom_commune_1",
+        #         "type_bien",
+        #         "type_dpe_1",
+        #         "periode_construction_dpe_1",
+        #         "type_energie_chauffage_1"
+        #     ],
+        #     default=["nom_commune_1", "type_bien", "type_dpe_1"]
+        # )
+
+        # # --------------------------------------------------
+        # # 📊 Agrégation pour le sunburst
+        # # --------------------------------------------------
+        # if len(levels) >= 1:
+        #     df_plot = df_merged.copy()
+        #     df_plot[levels] = df_plot[levels].fillna("Non spécifié")
+
+        #     if metric == "Valeur foncière totale":
+        #         df_agg = df_plot.groupby(levels, as_index=False).agg({
+        #             "valeur_fonciere_1": "sum",
+        #             "dens_pop": "mean",
+        #             "PrixMoyen": "mean",
+        #             "Prixm2Moyen": "mean"
+        #         })
+        #         value_col = "valeur_fonciere_1"
+        #     else:
+        #         df_agg = df_plot.groupby(levels, as_index=False).agg({
+        #             "id_mutation": "count",
+        #             "dens_pop": "mean",
+        #             "PrixMoyen": "mean",
+        #             "Prixm2Moyen": "mean"
+        #         })
+        #         df_agg.rename(columns={"id_mutation": "Nombre de ventes"}, inplace=True)
+        #         value_col = "Nombre de ventes"
+
+        #     # --------------------------------------------------
+        #     # 🌞 Sunburst enrichi
+        #     # --------------------------------------------------
+        #     fig = px.sunburst(
+        #         df_agg,
+        #         path=levels,
+        #         values=value_col,
+        #         color=levels[0],
+        #         color_discrete_sequence=px.colors.qualitative.Set3,
+        #         hover_data={
+        #             value_col: ":,.0f",
+        #             "dens_pop": ":,.0f",
+        #             "PrixMoyen": ":,.0f",
+        #             "Prixm2Moyen": ":,.0f"
+        #         },
+        #         title="Répartition selon " + " → ".join(levels)
+        #     )
+
+        #     fig.update_traces(
+        #         textinfo="label+percent parent",
+        #         hovertemplate=(
+        #             "<b>%{label}</b><br>" +
+        #             metric + " : %{customdata[0]:,.0f}<br>" +
+        #             "Densité pop. : %{customdata[1]:,.0f}<br>" +
+        #             "Prix moyen : %{customdata[2]:,.0f} €<br>" +
+        #             "Prix/m² moyen : %{customdata[3]:,.0f} €<br>" +
+        #             "<extra></extra>"
+        #         )
+        #     )
+
+        #     st.plotly_chart(fig, use_container_width=True)
+
+        # else:
+        #     st.warning("⚠️ Sélectionne au moins un niveau hiérarchique pour afficher le graphique.")
+
+
+    # def affiche():
+    #     st.write("coucou")

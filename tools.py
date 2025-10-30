@@ -4,7 +4,7 @@ mettre ici les modules et fonctions communes à toutes les pages
 """
 
 import streamlit as st
-from streamlit_lottie import st_lottie
+# from streamlit_lottie import st_lottie
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -21,19 +21,19 @@ PATH_DATA = "./data/"
 
 
 # --- Animation Loader depuis fichiers locaux ---
-def load_lottiefile(filepath):
-    try:
-        with open(filepath, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except:
-        return None
+# def load_lottiefile(filepath):
+#     try:
+#         with open(filepath, "r", encoding="utf-8") as f:
+#             return json.load(f)
+#     except:
+#         return None
 
-def safe_lottie_path(filepath, height=200):
-    anim = load_lottiefile(filepath)
-    if anim:
-        st_lottie(anim, height=height)
-    else:
-        st.warning(f"❌ Animation '{filepath}' introuvable.")
+# def safe_lottie_path(filepath, height=200):
+#     anim = load_lottiefile(filepath)
+#     if anim:
+#         st_lottie(anim, height=height)
+#     else:
+#         st.warning(f"❌ Animation '{filepath}' introuvable.")
 
 # mise en cache des fichiers chargés
 # pour éviter qu'ils se rechargent dès qu'on clique qque part
@@ -131,3 +131,33 @@ def preprocessing_df(df):
           "Fin du prepocessing...")
     
     return df2
+
+
+import os
+import zipfile
+import requests
+import streamlit as st
+
+DATA_DIR = "./data/Cyrielle"
+ZIP_URL = "https://www.meetmygeek.fr/DS-immo/data.zip"   # <--- your zip url
+ZIP_PATH = "./data/data.zip"
+
+# Cache to avoid re-running extraction unnecessarily
+@st.cache_resource
+def download_and_extract():
+      if os.path.exists("{}/BPE23.csv".format(DATA_DIR)) and os.listdir(DATA_DIR):
+        print("Datasets trouvés")
+        return
+
+      with st.spinner(f"Téléchargement des datasets..."):
+            os.makedirs(DATA_DIR, exist_ok=True)
+
+      # Download only if zip doesn't exist
+      if not os.path.isfile(ZIP_PATH):
+            print("zip manquant, téléchargement des fichiers")
+            response = requests.get(ZIP_URL)
+            with open(ZIP_PATH, "wb") as f:
+                  f.write(response.content)
+      # Extract
+      with zipfile.ZipFile(ZIP_PATH, "r") as zip_ref:
+            zip_ref.extractall(DATA_DIR)
