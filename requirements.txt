@@ -9,3 +9,4 @@ plotly.express
 geopandas
 joblib
 scikit-learn
+folium
