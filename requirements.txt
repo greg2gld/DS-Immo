@@ -7,3 +7,7 @@ streamlit_lottie
 tabulate
 plotly.express
 geopandas
+joblib
+scikit-learn
+folium
+streamlit_folium

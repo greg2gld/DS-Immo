@@ -1,13 +1,9 @@
-"""
-code de la page
-
-"""
-
 from tools import *
+from modelization import *
+from encode import *
+
+import streamlit as st
+from datetime import date, time, datetime
 
 def affiche():
-    st.title("Model hybrid")
-    st.markdown("""
-    Et si on remettait un peu d'humain dans la machine ?...
-                """)
-    st.header("1. ...")
+    st.title("Modélisation")
