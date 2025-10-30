@@ -10,3 +10,4 @@ geopandas
 joblib
 scikit-learn
 folium
+streamlit_folium
