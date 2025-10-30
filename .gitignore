@@ -1,1 +1,9 @@
 __pycache__
+data/data.zip
+BPE23.csv
+poi.csv
+OSM_POI.csv
+contours-iris.gpkg
+gtfs-stops-france-export-2024-02-01.csv
+batiment_groupe_dpe_representatif_logement.csv
+
