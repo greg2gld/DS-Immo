@@ -6,7 +6,8 @@ import folium
 from folium.plugins import MarkerCluster
 from streamlit_folium import st_folium
 from tools import *
-
+import pydeck as pdk
+from pathlib import Path
 
 # ---------------------------------------------------------------------
 # 🔧 CONSTANTES GLOBALES
@@ -107,7 +108,7 @@ DATA_PATHS = {
     "Délinquance": "data/Cyrielle/delinquence.csv",
     "Transports": "data/Cyrielle/gtfs-stops-france-export-2024-02-01.csv",
     "BPE": "data/Cyrielle/bpe2023_gironde.csv",
-    "OpenStreetMap": "data/Cyrielle/poi.csv",
+    "OpenStreetMap": "data/Cyrielle/OSM_POI.csv",
     "Statistiques ventes": "data/Cyrielle/indicateurs.csv"
 }
 
@@ -148,41 +149,47 @@ def load_csv_auto(path, encoding="utf-8", nrows=None, init_map=True):
             del st.session_state["m"]
     st.session_state["path"] = path
 
-    #     # --- Détection automatique du séparateur ---
+    # file_lower = Path(path).name.lower()
+
+    # # --- CAS SPÉCIAL : OpenStreetMap
+    # if "poi" in file_lower:
+    #     try:
+    #         df = pd.read_csv(
+    #             path,
+    #             sep="\t",              
+    #             encoding=encoding,
+    #             dtype=str,
+    #             engine="python",       
+    #             on_bad_lines="skip"    
+    #         )
+    #     except Exception as e:
+    #         st.error(f"Erreur lors de la lecture du fichier OSM : {e}")
+    #         st.stop()
+
+    #     df = df.rename(columns={"@lat": "latitude", "@lon": "longitude"})
+    #     return make_arrow_compatible(df)
+
+    # # --- CAS GÉNÉRAL pour tous les autres fichiers
     # try:
+    #     # Détection auto du séparateur
     #     with open(path, "r", encoding=encoding) as f:
-    #         sample = f.read(4096)
+    #         sample = f.read(3000)
+    #         sep = ";" if sample.count(";") > sample.count(",") else ","
 
-    #     if "\t" in sample:
-    #         sep = "\t"
-    #     elif sample.count(";") > sample.count(","):
-    #         sep = ";"
-    #     else:
-    #         sep = ","
-
-    #     print(f"🔍 Séparateur détecté : {repr(sep)}")
-
-    # except Exception as e:
-    #     st.error(f"Erreur lors de la lecture du fichier : {e}")
-    #     return pd.DataFrame()
-
-    # # --- Lecture du CSV avec pandas ---
-    # try:
     #     df = pd.read_csv(
     #         path,
     #         sep=sep,
     #         encoding=encoding,
-    #         low_memory=False,
-    #         na_values=["", " ", "None", "none", "NULL", "null", "NaN", "nan"],
-    #         keep_default_na=True,
     #         nrows=nrows,
+    #         engine="python",        # ✅ plus tolérant
+    #         on_bad_lines="skip"     # ✅ évite crash si anomalie
     #     )
 
-    #     print(f"✅ Fichier chargé : {len(df):,} lignes, {len(df.columns)} colonnes")
-
     # except Exception as e:
-    #     st.error(f"Erreur lors du chargement du CSV : {e}")
-    #     df = pd.DataFrame()
+    #     st.error(f"Erreur lecture CSV : {path}\n{e}")
+    #     st.stop()
+
+    # return make_arrow_compatible(df)
 
     with open(path, 'r', encoding=encoding) as f:
         sample = f.read(4096)
@@ -203,6 +210,7 @@ def load_csv_auto(path, encoding="utf-8", nrows=None, init_map=True):
         nrows=nrows
     )
     df = make_arrow_compatible(df)
+    
     if init_map:
         possible_lat_cols = ["latitude", "lat", "y", "coord_y", "stop_lat", "LATITUDE"]
         possible_lon_cols = ["longitude", "lon", "x", "coord_x", "stop_lon", "LONGITUDE"]
@@ -252,18 +260,13 @@ def show_styled_df(df, max_col_px=380):
     # Affichage Streamlit sans l’index
     st.markdown(styler.hide(axis="index").to_html(), unsafe_allow_html=True)
 
-# ---------------------------------------------------------------------
-# 📊 PAGE PRINCIPALE
-# ---------------------------------------------------------------------
-
+# PAGE PRINCIPALE
 def affiche():
     st.title("Exploration des données")
  
     tab1, tab2 = st.tabs(["📚 Synthèse des bases", "🔎 Exploration des bases retenues"])
 
-    # -----------------------------------------------------------------
-    # 🗂️ Onglet 1 : Synthèse
-    # -----------------------------------------------------------------
+    # Onglet 1 : Synthèse
     with tab1:
         st.markdown("""
         Projet proposé par l'équipe :
@@ -276,11 +279,11 @@ def affiche():
         st.header("Méthodologie")
         st.image(os.path.join("images", "Diag1.png"))
 
-        st.subheader("❌ Bases non retenues dans la modélisation")
+        st.subheader("Bases non retenues dans la modélisation")
         show_styled_df(BASES_NON_RETENUES)
         # show_styled_df(BASES_NON_RETENUES.reset_index(drop=True).rename_axis("N°").rename(index=lambda x: x + 1))
 
-        st.subheader("✅ Bases retenues dans la modélisation")
+        st.subheader("Bases retenues dans la modélisation")
         show_styled_df(BASES_RETENUES)
         # show_styled_df(BASES_RETENUES.reset_index(drop=True).rename_axis("N°").rename(index=lambda x: x + 1))
 
@@ -324,7 +327,7 @@ def affiche():
             # Statistiques descriptives (toutes colonnes)
             df_describe = df.describe(include="all").fillna("")
 
-            # ✅ Suppression des lignes non pertinentes pour les variables non numériques
+            #Suppression des lignes non pertinentes pour les variables non numériques
             df_describe = df_describe.drop(index=["top", "unique", "freq"], errors="ignore")
 
             # Transposition pour lecture plus intuitive
@@ -379,9 +382,7 @@ def affiche():
 
         with t4:
 
-            # --------------------------------------------------------
-            # 1️⃣ Cas : Statistiques ventes
-            # --------------------------------------------------------
+            # Cas : Statistiques ventes
             if selected_name == "Statistiques ventes":
                 commune_cols = [c for c in ["INSEE_COM", "code_insee", "codgeo"] if c in df.columns]
                 if not commune_cols:
@@ -460,9 +461,7 @@ def affiche():
 
                 st_folium(m, width=850, height=600)
 
-            # --------------------------------------------------------
-            # 2️⃣ Cas : Délinquance
-            # --------------------------------------------------------
+            # Cas : Délinquance
             elif selected_name == "Délinquance":
 
                 commune_cols = [c for c in ["code_insee", "codgeo", "INSEE_COM", "CODGEO_2024"] if c in df.columns]
@@ -557,10 +556,8 @@ def affiche():
                 st.caption("🟣 Les zones grisées indiquent des données manquantes (NA).")
 
 
-            # --------------------------------------------------------
-            # 3️⃣ Cas : DVF géolocalisé
-            # --------------------------------------------------------
-
+            
+            # Cas : DVF géolocalisé
             elif selected_name == "DVF géolocalisé (transactions)":
 
                 # --- Nettoyage des coordonnées
@@ -573,9 +570,8 @@ def affiche():
                 df["surface_reelle_bati"] = pd.to_numeric(df["surface_reelle_bati"], errors="coerce")
                 df["nombre_pieces_principales"] = pd.to_numeric(df["nombre_pieces_principales"], errors="coerce")
 
-                # --------------------------------------------------------
-                # 🗾 Carte choroplèthe - Nb ventes par commune
-                # --------------------------------------------------------
+
+                # Carte choroplèthe - Nb ventes par commune
                 st.subheader("🧭 Nombre de ventes par commune (Gironde)")
 
                 geojson_path = "data/Cyrielle/communes-33-gironde.geojson"
@@ -611,10 +607,8 @@ def affiche():
 
                     st.plotly_chart(fig_choro, use_container_width=True)
 
-            # --------------------------------------------------------
-            # 4️⃣ Cas : Densité de la population
-            # --------------------------------------------------------
 
+            # Cas : Densité de la population
             elif selected_name == "Densité de population":
 
                 geojson_path = "data/Cyrielle/communes-33-gironde.geojson"
@@ -682,6 +676,58 @@ def affiche():
                 )
 
                 st.plotly_chart(fig_densite, use_container_width=True)
+
+            # Cas : Transports — Carte des arrêts
+            elif selected_name == "Transports":
+
+                data_path = "data/Cyrielle/gtfs-stops-france-export-2024-02-01.csv"
+
+                if not os.path.exists(data_path):
+                    st.warning("❌ Fichier des arrêts de transport introuvable.")
+                    st.stop()
+
+                @st.cache_data
+                def load_transport_data():
+                    df = pd.read_csv(data_path, usecols=["stop_lat", "stop_lon"], dtype=float)
+                    return df
+
+                df_arrets = load_transport_data()
+
+                # Filtre Nouvelle-Aquitaine uniquement
+                df_arrets = df_arrets[
+                    (df_arrets["stop_lat"].between(42.72, 46.80)) &
+                    (df_arrets["stop_lon"].between(-1.79, 1.45))
+                ]
+
+                # Carte centrée sur Bordeaux pour éviter écran noir
+                view_state = pdk.ViewState(
+                    latitude=44.84,
+                    longitude=-0.58,
+                    zoom=7,
+                    pitch=0
+                )
+
+                # ScatterLayer (points)
+                layer = pdk.Layer(
+                    "ScatterplotLayer",
+                    data=df_arrets,
+                    get_position='[stop_lon, stop_lat]',
+                    get_radius=80, 
+                    radius_min_pixels=3, 
+                    radius_max_pixels=30, 
+                    pickable=False
+                )
+
+                r = pdk.Deck(
+                    layers=[layer],
+                    initial_view_state=view_state,
+                    map_provider="carto", 
+                    map_style="light"    
+                )
+
+                st.pydeck_chart(r)
+                st.success(f"✅ {len(df_arrets):,} arrêts transport affichés en Nouvelle-Aquitaine")
+
 
 
                 # else:
