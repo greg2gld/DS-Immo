@@ -219,8 +219,8 @@ def prepare_data(data, bundle_type = "global"):
     for key in direct_copy:
         X[key] = data[key]
 
-    if "adresse_insee" in X:
-        X["code_commune_1"] = X["adresse_insee"]
+    if "adresse_insee" in data:
+        X["code_commune_1"] = data["adresse_insee"]
     else:
         X["code_commune_1"] = data["code_commune_1"]
     

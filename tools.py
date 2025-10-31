@@ -21,19 +21,19 @@ PATH_DATA = "./data/"
 
 
 # --- Animation Loader depuis fichiers locaux ---
-# def load_lottiefile(filepath):
-#     try:
-#         with open(filepath, "r", encoding="utf-8") as f:
-#             return json.load(f)
-#     except:
-#         return None
+def load_lottiefile(filepath):
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except:
+        return None
 
-# def safe_lottie_path(filepath, height=200):
-#     anim = load_lottiefile(filepath)
-#     if anim:
-#         st_lottie(anim, height=height)
-#     else:
-#         st.warning(f"❌ Animation '{filepath}' introuvable.")
+def safe_lottie_path(filepath, height=200):
+    anim = load_lottiefile(filepath)
+    if anim:
+        st_lottie(anim, height=height)
+    else:
+        st.warning(f"❌ Animation '{filepath}' introuvable.")
 
 # mise en cache des fichiers chargés
 # pour éviter qu'ils se rechargent dès qu'on clique qque part
@@ -145,7 +145,7 @@ ZIP_PATH = "./data/data.zip"
 # Cache to avoid re-running extraction unnecessarily
 @st.cache_resource
 def download_and_extract():
-      if os.path.exists("{}/BPE23.csv".format(DATA_DIR)) and os.listdir(DATA_DIR):
+      if os.path.exists("{}/poi.csv".format(DATA_DIR)) and os.listdir(DATA_DIR):
         print("Datasets trouvés")
         return
 
