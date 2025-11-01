@@ -10,7 +10,8 @@ import page_2 # Preprocessing et Feature engineering
 import page_3 # DataVisualisation
 import page_4 # Modélisation
 import page_5 # Simulation
-import page_6 # Conclusion
+import page_6 # SHAP
+import page_7 # Conclusion
 # import page_st_fct # qques fonctions streamlit
 
 download_and_extract()
@@ -28,7 +29,7 @@ print(time.strftime('%Y_%m_%d %H:%M:%S'),
 st.sidebar.title("Prédire les prix immobiliers en Gironde")
 st.sidebar.header("Sommaire")
 
-pages = ["🏠 Introduction", "🔍 Exploration", "⚙️ Preprocessing et Feature engineering", "📊 Datavisualisation", "📈 Modélisation", "🧮 Simulation", "🚀 Conclusion"]
+pages = ["🏠 Introduction", "🔍 Exploration", "⚙️ Preprocessing et Feature engineering", "📊 Datavisualisation", "📈 Modélisation", "🧮 Simulation","Interprétabilité SHAP", "🚀 Conclusion"]
 page=st.sidebar.radio("Aller à", pages)
 
 st.sidebar.markdown("""
@@ -66,3 +67,6 @@ if page == pages[5] :
 
 if page == pages[6] :
   page_6.affiche()
+
+if page == pages[7] :
+  page_7.affiche()

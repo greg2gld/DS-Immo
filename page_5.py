@@ -22,8 +22,8 @@ def get_sample(nb_entries = 4):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     X_train["valeur_fonciere_1"] = y_train
     X_test["valeur_fonciere_1"] = y_test
-    df_train_sample = X_train.sample(n=nb_entries)
-    df_test_sample = X_train.sample(n=nb_entries)
+    df_train_sample = X_train.sample(n=nb_entries, random_state=3)
+    df_test_sample = X_test.sample(n=nb_entries, random_state=4)
     df_train_sample["adresse_full"] = df_train_sample["adresse_complete_1"]+ " " + df_train_sample["code_commune_1"].astype(str) + " " +  df_train_sample["nom_commune_1"]
     df_test_sample["adresse_full"] = df_test_sample["adresse_complete_1"] + " " + df_test_sample["code_commune_1"].astype(str) + " " +  df_test_sample["nom_commune_1"]
     return df_train_sample, df_test_sample
@@ -116,7 +116,7 @@ def show_stats(df):
             
 
 def affiche():
-    st.title("Modélisation")
+    st.title("Simulation")
     tab_immo, tab_compare  = st.tabs(["Prédiction immobilière", "Comparatif Modèles immobiliers"])
 
     with tab_immo:
