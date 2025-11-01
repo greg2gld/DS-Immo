@@ -108,7 +108,8 @@ DATA_PATHS = {
     "Délinquance": "data/Cyrielle/delinquence.csv",
     "Transports": "data/Cyrielle/gtfs-stops-france-export-2024-02-01.csv",
     "BPE": "data/Cyrielle/bpe2023_gironde.csv",
-    "OpenStreetMap": "data/Cyrielle/OSM_POI.csv",
+    #"OpenStreetMap": "data/Cyrielle/OSM_POI.csv",
+    "OpenStreetMap": "data/Cyrielle/openstreetmap_bordeaux.csv",
     "Statistiques ventes": "data/Cyrielle/indicateurs.csv"
 }
 
@@ -149,12 +150,49 @@ def load_csv_auto(path, encoding="utf-8", nrows=None, init_map=True):
             del st.session_state["m"]
     st.session_state["path"] = path
 
+    # file_lower = Path(path).name.lower()
+
+    # # --- CAS SPÉCIAL : OpenStreetMap
+    # if "poi" in file_lower:
+    #     try:
+    #         df = pd.read_csv(
+    #             path,
+    #             sep="\t",              
+    #             encoding=encoding,
+    #             dtype=str,
+    #             engine="python",       
+    #             on_bad_lines="skip"    
+    #         )
+    #     except Exception as e:
+    #         st.error(f"Erreur lors de la lecture du fichier OSM : {e}")
+    #         st.stop()
+
+    #     df = df.rename(columns={"@lat": "latitude", "@lon": "longitude"})
+    #     return make_arrow_compatible(df)
+
+    # # --- CAS GÉNÉRAL pour tous les autres fichiers
+    # try:
+    #     # Détection auto du séparateur
+    #     with open(path, "r", encoding=encoding) as f:
+    #         sample = f.read(3000)
+    #         sep = ";" if sample.count(";") > sample.count(",") else ","
+
+    #     df = pd.read_csv(
+    #         path,
+    #         sep=sep,
+    #         encoding=encoding,
+    #         nrows=nrows,
+    #         engine="python",        # ✅ plus tolérant
+    #         on_bad_lines="skip"     # ✅ évite crash si anomalie
+    #     )
+
+    # except Exception as e:
+    #     st.error(f"Erreur lecture CSV : {path}\n{e}")
+    #     st.stop()
+
+    # return make_arrow_compatible(df)
     if path == DATA_PATHS["OpenStreetMap"]:
-        df = pd.read_csv(path, delimiter = "\t", on_bad_lines='warn', index_col='@id')
-        df = df[
-                (df["@lat"].between(42.72, 46.80)) &
-                (df["@lon"].between(-1.79, 1.45))
-            ]
+        df = pd.read_csv(path)
     elif path == DATA_PATHS["Transports"]:
         df = pd.read_csv(path, usecols=["stop_lat", "stop_lon"], dtype=float)
     else:
@@ -685,38 +723,132 @@ def affiche():
 
                 st.pydeck_chart(r)
                 st.success(f"✅ {len(df_arrets):,} arrêts transport affichés en Nouvelle-Aquitaine")
-           
             elif selected_name == "OpenStreetMap":
+                from geopy.distance import distance
+                # df = df[
+                #     (df["@lat"].between(42.72, 46.80)) &
+                #     (df["@lon"].between(-1.79, 1.45))
+                # ]
 
-                # Carte centrée sur Bordeaux pour éviter écran noir
-                view_state = pdk.ViewState(
-                    latitude=44.84,
-                    longitude=-0.58,
-                    zoom=7,
-                    pitch=0
-                )
+                center_lat, center_lon = 44.838118, -0.588613
+                # radius_km = 10
+                # df['distance_km'] = df.apply(
+                #     lambda row: distance((center_lat, center_lon), (row['@lat'], row['@lon'])).km,
+                #     axis=1
+                # )
 
-                # ScatterLayer (points)
-                layer = pdk.Layer(
-                    "ScatterplotLayer",
-                    data=df,
-                    get_position='[@lon, @lat]',
-                    get_radius=80, 
-                    radius_min_pixels=3, 
-                    radius_max_pixels=30, 
-                    pickable=False
-                )
+                # # Filtrer les points dans un rayon de 5 km
+                # df_filtered = df[df['distance_km'] <= radius_km]
+                # df_filtered.to_csv("./data/Cyrielle/openstreetmap_bordeaux.csv", index=True)
+                # def safe_val(x):
+                #     return x if pd.notna(x) else ""
 
-                r = pdk.Deck(
-                    layers=[layer],
-                    initial_view_state=view_state,
-                    map_provider="carto", 
-                    map_style="light"    
-                )
+                # if "m" not in st.session_state:
+                #     m = folium.Map(location=[center_lat, center_lon], zoom_start=12, control_scale=True)
 
-                st.pydeck_chart(r)
-                st.success(f"✅ {len(df):,} points d'intérêt affichés en Nouvelle-Aquitaine")
-             
+                #     # Option: ajouter un layer control + fond
+                #     folium.TileLayer("cartodbpositron").add_to(m)
+                #     folium.TileLayer("OpenStreetMap").add_to(m)
+
+                #     candidate_type_cols = [
+                #         "aerialway", "aerodrome", "aeroway", "amenity", "boundary", "bridge", "craft",
+                #         "emergency", "heritage", "highway", "historic", "junction", "landuse", "leisure",
+                #         "man_made", "military", "mountain_pass", "natural", "office", "place", "railway",
+                #         "shop", "tourism", "tunnel", "waterway"
+                #     ]
+                #     type_cols = [c for c in candidate_type_cols if c in df.columns]
+                #     for c in type_cols:
+                #         df[c] = np.where(df[c].notna() & (df[c].astype(str).str.strip() != ""), 1, 0)
+
+                #     priority = [
+                #         "amenity", "shop", "tourism", "leisure", "historic", "heritage",
+                #         "natural", "man_made", "railway", "aeroway", "highway", "waterway",
+                #         "bridge", "tunnel", "office", "place", "landuse", "craft", "emergency",
+                #         "aerialway", "aerodrome", "junction", "military", "mountain_pass", "boundary"
+                #     ]
+                #     priority = [p for p in priority if p in type_cols]  # garder uniquement celles présentes
+
+                #     def pick_primary_type(row):
+                #         for t in priority:
+                #             if row[t] == 1:
+                #                 return t
+                #         return "other"
+
+                #     df["poi_type"] = df.apply(pick_primary_type, axis=1)
+
+                #     palette = [
+                #         "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
+                #         "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf",
+                #         "#393b79", "#637939", "#8c6d31", "#843c39", "#7b4173",
+                #         "#3182bd", "#e6550d", "#31a354", "#756bb1", "#636363",
+                #         "#9c9ede", "#e7ba52", "#bd9e39", "#ad494a", "#a55194"
+                #     ]
+                #     types_unique = df["poi_type"].unique().tolist()
+                #     type_to_color = {t: palette[i % len(palette)] for i, t in enumerate(sorted(types_unique))}
+
+
+                #     for _, r in df.iterrows():
+                #         lat, lon = float(r["@lat"]), float(r["@lon"])
+                #         t = r["poi_type"]
+                #         color = type_to_color.get(t, "#000000")
+
+                #         # Texte popup
+                #         #name = r.get("name") or r.get("name:fr") or r.get("local_name") or ""
+                #         name = safe_val(r.get("name")) or safe_val(r.get("name:fr")) or safe_val(r.get("local_name")) or ""
+                #         dist = r.get("distance_km")
+                #         dist_txt = f"<br><b>distance_km:</b> {dist:.3f}" if pd.notna(dist) else ""
+                #         popup_html = f"""
+                #         <b>Type:</b> {t}
+                #         <br><b>Nom:</b> {name}
+                #         {dist_txt}
+                #         """
+
+                #         folium.CircleMarker(
+                #             location=(lat, lon),
+                #             radius=5,
+                #             color=color,
+                #             weight=1,
+                #             fill=True,
+                #             fill_color=color,
+                #             fill_opacity=0.85,
+                #             popup=folium.Popup(popup_html, max_width=300),
+                #             tooltip=name if name else t
+                #         ).add_to(m)
+
+
+                #     legend_items = "".join(
+                #         f'<div style="display:flex;align-items:center;margin-bottom:4px">'
+                #         f'<span style="display:inline-block;width:12px;height:12px;background:{type_to_color[t]};margin-right:6px;border:1px solid #333"></span>'
+                #         f'<span style="font-size:12px;color:black;">{t}</span></div>'
+                #         for t in sorted(type_to_color.keys())
+                #     )
+                #     legend_html = f"""
+                #     <div style="
+                #         position: fixed; 
+                #         bottom: 20px; left: 20px; z-index: 9999;
+                #         background: white; padding: 10px 12px; border: 1px solid #aaa; border-radius: 6px;
+                #         box-shadow: 0 1px 4px rgba(0,0,0,0.3); max-height: 50vh; overflow:auto; font-family: Arial; 
+                #     ">
+                #         <div style="font-weight:600; margin-bottom:6px;">Légende</div>
+                #         {legend_items}
+                #     </div>
+                #     """
+                #     m.get_root().html.add_child(folium.Element(legend_html))
+                #     st.session_state["m"] = m
+                #     m.save("./data/map_bordeaux.html")
+                #     st.write(df.shape)
+        
+ 
+                if "m" in st.session_state:
+                    st_folium(st.session_state["m"], width=850, height=600)
+                html_path = Path("./data/map_bordeaux.html")  # adapte le chemin
+
+                # Lire le HTML et l'afficher
+                with open(html_path, "r", encoding="utf-8") as f:
+                    html = f.read()
+
+                st.components.v1.html(html, height=800, scrolling=True)
+                
             elif lat_col and lon_col:
                 if "m" in st.session_state:
                     st_folium(st.session_state["m"], width=850, height=600)
