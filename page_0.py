@@ -109,10 +109,10 @@ De plus, un des membres de l'équipe habite sur place, ce qui nous a permis de v
     st.markdown("""
 🔍 **Exploration :** les données que nous avons retenues  
 ⚙️ **Preprocessing et Feature engineering :** l'exploitation des données et leurs transformations  
-📊 **DataVisualisation :** une vue d'ensemble de notre dataset  
+📊 **Datavisualisation :** une vue d'ensemble de notre dataset  
 📈 **Modélisation :** les modèles étudiés et leurs résultats  
 🧮 **Simulation :** un simulateur permettant de retrouver les résultats obtenus sur notre base mais également un simulateur pour les nouveaux biens  
-- **Interprétabilité :** l'explication de l'impact de chaque feature pôur les prédictions
+🧠 **Interprétabilité :** l'explication de l'impact de chaque feature pour les prédictions  
 🚀 **Conclusion :** ce que nous avons appris et comment aller plus loin  
 
 """)
