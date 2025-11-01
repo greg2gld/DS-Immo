@@ -130,10 +130,10 @@ def affiche():
             "Modèle Appartements",
             "Modèle Max"
         ],
-        "R² train (en %)": [90.64,],
-        "MAPE train (en %)": [14.81,],
-        "R² test (en %)": [84.38,],
-        "MAPE test (en %)": [17.03,]
+        "R² train (en %)": [90.64, 89.36, 89.35, 92.52],
+        "MAPE train (en %)": [14.81, 14.74, 11.82, 13.42],
+        "R² test (en %)": [84.38, 78.37, 79.73, 86.66],
+        "MAPE test (en %)": [17.03, 19.07, 14.64, 15.64]
     }
 
     df = pd.DataFrame(data)
