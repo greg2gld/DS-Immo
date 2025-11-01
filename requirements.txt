@@ -13,3 +13,6 @@ folium
 streamlit_folium
 pydeck
 geopy
+lightgbm
+ridge
+catboost
