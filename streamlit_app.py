@@ -29,7 +29,7 @@ print(time.strftime('%Y_%m_%d %H:%M:%S'),
 st.sidebar.title("Prédire les prix immobiliers en Gironde")
 st.sidebar.header("Sommaire")
 
-pages = ["🏠 Introduction", "🔍 Exploration", "⚙️ Preprocessing et Feature engineering", "📊 Datavisualisation", "📈 Modélisation", "🧮 Simulation","Interprétabilité SHAP", "🚀 Conclusion"]
+pages = ["🏠 Introduction", "🔍 Exploration", "⚙️ Preprocessing et Feature engineering", "📊 Datavisualisation", "📈 Modélisation", "🧮 Simulation","🧠 Interprétabilité SHAP", "🚀 Conclusion"]
 page=st.sidebar.radio("Aller à", pages)
 
 st.sidebar.markdown("""
