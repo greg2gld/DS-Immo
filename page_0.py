@@ -47,7 +47,7 @@ Notamment, à partir de :
 - Aller plus loin que le simple surface * prix/m² du quartier pour tendre vers une valeur **intrinsèque**
 - Détecter des éventuelles **anomalies de marché**
                 
-Et aussi... mettre en pratique nos connaissances en Data Science et manipuler plein de données intéressantes ! 😍
+Et aussi... mettre en pratique nos connaissances en Data Science et manipuler plein de données intéressantes !
 ...
 
 **🌍Pourquoi la Gironde ?**
@@ -58,7 +58,7 @@ Et aussi... mettre en pratique nos connaissances en Data Science et manipuler pl
     - Que socio-économique
 - Attractivité de certaines zones et bonne dynamique des prix
  
-De plus, un des membres de l'équipe habite sur place, ce qui nous a permis de vérifier certaines infos et d'être dans le concret ! 🤓
+De plus, un des membres de l'équipe habite sur place, ce qui nous a permis de vérifier certaines infos et d'être dans le concret !
 
 
             """)
@@ -68,7 +68,7 @@ De plus, un des membres de l'équipe habite sur place, ce qui nous a permis de v
     st.markdown("""
 - **Exploration :** les données que nous avons retenues
 - **Preprocessing et Feature engineering :** l'exploitation des données et leurs transformations
-- **DataVisualisation :** une vue d'ensemble de notre dataset
+- **Datavisualisation :** une vue d'ensemble de notre dataset
 - **Modélisation :** les modèles étudiés et leurs résultats
 - **Simulation :** un simulateur permettant de retrouver les résultats obtenus sur notre base mais également un simulateur pour les nouveaux biens
 - **Conclusion :** ce que nous avons appris et comment aller plus loin

@@ -114,7 +114,7 @@ def affiche():
 
         st.markdown("**BPE, OpenStreetMap, Transports**")
         st.info("""
-        - CConversion des données dans les types attendus
+        - Conversion des données dans les types attendus
         - Restriction du périmètre géographique à la **Gironde**  
         - Fusion des différentes sources dans une base unique  
         - Suppression des doublons  

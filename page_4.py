@@ -32,7 +32,7 @@ def affiche():
     st.header("3️⃣ Sélection du modèle de base")
 
     image = Image.open("data/Cyrielle/resultats_lazyregressor.png")
-    st.image(image, caption="Résultats LazyRegressor – Comparaison des modèles")
+    st.image(image, caption="Résultats LazyPredict – Comparaison des modèles")
 
     st.success("✅ LGBMRegressor retenu")
 
@@ -120,3 +120,24 @@ def affiche():
     - **Modèle Appartements** : Modèle retenu appliqué aux seuls appartements  
     - **Modèle Max** : Modèle présentant les meilleurs résultats avec un clustering générant une suppression de la moitié du dataset
     """)
+
+    st.header("📈 Performances globale de ces modèles")
+
+    data = {
+        "Types de modèles": [
+            "Modèle Global",
+            "Modèle Maisons",
+            "Modèle Appartements",
+            "Modèle Max"
+        ],
+        "R² train (en %)": [90.64,],
+        "MAPE train (en %)": [14.81,],
+        "R² test (en %)": [84.38,],
+        "MAPE test (en %)": [17.03,]
+    }
+
+    df = pd.DataFrame(data)
+ 
+    # Affichage tableau
+    with st.expander("📊 Voir les performances de ces différents modèles"):
+        st.dataframe(df)

@@ -149,74 +149,42 @@ def load_csv_auto(path, encoding="utf-8", nrows=None, init_map=True):
             del st.session_state["m"]
     st.session_state["path"] = path
 
-    # file_lower = Path(path).name.lower()
+    if path == DATA_PATHS["OpenStreetMap"]:
+        df = pd.read_csv(path, delimiter = "\t", on_bad_lines='warn', index_col='@id')
+        df = df[
+                (df["@lat"].between(42.72, 46.80)) &
+                (df["@lon"].between(-1.79, 1.45))
+            ]
+    elif path == DATA_PATHS["Transports"]:
+        df = pd.read_csv(path, usecols=["stop_lat", "stop_lon"], dtype=float)
+    else:
+        with open(path, 'r', encoding=encoding) as f:
+            sample = f.read(4096)
+            # Détection du séparateur dominant
+            if '\t' in sample:
+                sep = '\t'
+            elif sample.count(';') > sample.count(','):
+                sep = ';'
+            else:
+                sep = ','
+        df = pd.read_csv(
+            path,
+            sep=sep,
+            encoding=encoding,
+            low_memory=False,
+            na_values=["", " ", "None", "none", "NULL", "null", "NaN", "nan"],
+            keep_default_na=True,
+            nrows=nrows
+        )
 
-    # # --- CAS SPÉCIAL : OpenStreetMap
-    # if "poi" in file_lower:
-    #     try:
-    #         df = pd.read_csv(
-    #             path,
-    #             sep="\t",              
-    #             encoding=encoding,
-    #             dtype=str,
-    #             engine="python",       
-    #             on_bad_lines="skip"    
-    #         )
-    #     except Exception as e:
-    #         st.error(f"Erreur lors de la lecture du fichier OSM : {e}")
-    #         st.stop()
-
-    #     df = df.rename(columns={"@lat": "latitude", "@lon": "longitude"})
-    #     return make_arrow_compatible(df)
-
-    # # --- CAS GÉNÉRAL pour tous les autres fichiers
-    # try:
-    #     # Détection auto du séparateur
-    #     with open(path, "r", encoding=encoding) as f:
-    #         sample = f.read(3000)
-    #         sep = ";" if sample.count(";") > sample.count(",") else ","
-
-    #     df = pd.read_csv(
-    #         path,
-    #         sep=sep,
-    #         encoding=encoding,
-    #         nrows=nrows,
-    #         engine="python",        # ✅ plus tolérant
-    #         on_bad_lines="skip"     # ✅ évite crash si anomalie
-    #     )
-
-    # except Exception as e:
-    #     st.error(f"Erreur lecture CSV : {path}\n{e}")
-    #     st.stop()
-
-    # return make_arrow_compatible(df)
-
-    with open(path, 'r', encoding=encoding) as f:
-        sample = f.read(4096)
-        # Détection du séparateur dominant
-        if '\t' in sample:
-            sep = '\t'
-        elif sample.count(';') > sample.count(','):
-            sep = ';'
-        else:
-            sep = ','
-    df = pd.read_csv(
-        path,
-        sep=sep,
-        encoding=encoding,
-        low_memory=False,
-        na_values=["", " ", "None", "none", "NULL", "null", "NaN", "nan"],
-        keep_default_na=True,
-        nrows=nrows
-    )
     df = make_arrow_compatible(df)
     
-    if init_map:
-        possible_lat_cols = ["latitude", "lat", "y", "coord_y", "stop_lat", "LATITUDE"]
-        possible_lon_cols = ["longitude", "lon", "x", "coord_x", "stop_lon", "LONGITUDE"]
-        lat_col = next((col for col in possible_lat_cols if col in df.columns), None)
-        lon_col = next((col for col in possible_lon_cols if col in df.columns), None)
+    possible_lat_cols = ["latitude", "lat", "y", "coord_y", "stop_lat", "LATITUDE"]
+    possible_lon_cols = ["longitude", "lon", "x", "coord_x", "stop_lon", "LONGITUDE"]
+    lat_col = next((col for col in possible_lat_cols if col in df.columns), None)
+    lon_col = next((col for col in possible_lon_cols if col in df.columns), None)
 
+    if init_map:
         if lat_col and lon_col:
             df_valid = df.dropna(subset=[lat_col, lon_col]).copy()
             df_valid[lat_col] = pd.to_numeric(df_valid[lat_col], errors="coerce")
@@ -231,7 +199,7 @@ def load_csv_auto(path, encoding="utf-8", nrows=None, init_map=True):
                         radius=4, color="blue", fill=True, fill_opacity=0.6
                     ).add_to(m)
                 st.session_state["m"] = m
-    return df
+    return df, lat_col, lon_col
 
 
 def show_styled_df(df, max_col_px=380):
@@ -279,14 +247,13 @@ def affiche():
         st.header("Méthodologie")
         st.image(os.path.join("images", "Diag1.png"))
 
-        st.subheader("Bases non retenues dans la modélisation")
-        show_styled_df(BASES_NON_RETENUES)
-        # show_styled_df(BASES_NON_RETENUES.reset_index(drop=True).rename_axis("N°").rename(index=lambda x: x + 1))
-
-        st.subheader("Bases retenues dans la modélisation")
+        st.subheader("✅ Bases retenues dans la modélisation")
         show_styled_df(BASES_RETENUES)
         # show_styled_df(BASES_RETENUES.reset_index(drop=True).rename_axis("N°").rename(index=lambda x: x + 1))
 
+        st.subheader("❌ Bases non retenues dans la modélisation")
+        show_styled_df(BASES_NON_RETENUES)
+        # show_styled_df(BASES_NON_RETENUES.reset_index(drop=True).rename_axis("N°").rename(index=lambda x: x + 1))
 
 
    # --- SECTION 2 : EXPLORATION INTERACTIVE ---
@@ -296,7 +263,7 @@ def affiche():
         path = DATA_PATHS[selected_name]
         
         with st.spinner(f"Chargement de {selected_name}..."):
-            df = load_csv_auto(path, init_map=INIT_MAP[selected_name])
+            df, lat_col, lon_col = load_csv_auto(path, init_map=INIT_MAP[selected_name])
 
         st.success(f"{selected_name} chargée ({df.shape[0]:,} lignes × {df.shape[1]} colonnes)")
         st.write("### Aperçu des données")
@@ -679,25 +646,16 @@ def affiche():
 
             # Cas : Transports — Carte des arrêts
             elif selected_name == "Transports":
-
-                data_path = "data/Cyrielle/gtfs-stops-france-export-2024-02-01.csv"
-
-                if not os.path.exists(data_path):
+                if not os.path.exists(DATA_PATHS[selected_name]):
                     st.warning("❌ Fichier des arrêts de transport introuvable.")
                     st.stop()
 
-                @st.cache_data
-                def load_transport_data():
-                    df = pd.read_csv(data_path, usecols=["stop_lat", "stop_lon"], dtype=float)
-                    return df
-
-                df_arrets = load_transport_data()
-
-                # Filtre Nouvelle-Aquitaine uniquement
+                df_arrets = df.copy()
                 df_arrets = df_arrets[
                     (df_arrets["stop_lat"].between(42.72, 46.80)) &
                     (df_arrets["stop_lon"].between(-1.79, 1.45))
                 ]
+
 
                 # Carte centrée sur Bordeaux pour éviter écran noir
                 view_state = pdk.ViewState(
@@ -727,11 +685,40 @@ def affiche():
 
                 st.pydeck_chart(r)
                 st.success(f"✅ {len(df_arrets):,} arrêts transport affichés en Nouvelle-Aquitaine")
+           
+            elif selected_name == "OpenStreetMap":
 
+                # Carte centrée sur Bordeaux pour éviter écran noir
+                view_state = pdk.ViewState(
+                    latitude=44.84,
+                    longitude=-0.58,
+                    zoom=7,
+                    pitch=0
+                )
 
+                # ScatterLayer (points)
+                layer = pdk.Layer(
+                    "ScatterplotLayer",
+                    data=df,
+                    get_position='[@lon, @lat]',
+                    get_radius=80, 
+                    radius_min_pixels=3, 
+                    radius_max_pixels=30, 
+                    pickable=False
+                )
 
-                # else:
-                #     if "m" in st.session_state:
-                #         st_folium(st.session_state["m"], width=850, height=600)
-                #     else:
-                #         st.info("Aucune carte disponible pour cette base.")
+                r = pdk.Deck(
+                    layers=[layer],
+                    initial_view_state=view_state,
+                    map_provider="carto", 
+                    map_style="light"    
+                )
+
+                st.pydeck_chart(r)
+                st.success(f"✅ {len(df):,} points d'intérêt affichés en Nouvelle-Aquitaine")
+             
+            elif lat_col and lon_col:
+                if "m" in st.session_state:
+                    st_folium(st.session_state["m"], width=850, height=600)
+            else:
+                st.info("Aucune carte disponible pour cette base.")

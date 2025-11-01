@@ -89,8 +89,8 @@ def affiche():
         🔹 **2. Ajouter des données en temps réel** : via **web scraping** de sites d’agences pour suivre les prix de marché actuels.  
         🔹 **3. Étendre le périmètre** : tester le modèle sur d’autres départements ou régions.  
         🔹 **4. Diversifier les types de biens** : terrains, locaux commerciaux, industriels.  
-        🔹 **5. Explorer d’autres approches** : modèles neuronaux, deep learning, ou modèles hiérarchiques spatio-temporels.  
-
+        🔹 **5. Explorer d’autres approches** : réseaux de neurones...
+                    
         En résumé, ce projet a posé les **fondations d’un modèle robuste et évolutif**, qui pourrait devenir un outil complet d’aide à la décision pour les acteurs du marché immobilier.
         """)
 
@@ -195,7 +195,7 @@ def affiche():
         🧠 **Enseignements tirés :**
         - Importance de la **coordination technique et humaine** dans un projet Data Science. 
         - Nécessité de **documenter et partager les expérimentations**.  
-        - Mise en place nécessaire de **revues de code systématiques".
+        - Mise en place nécessaire de **revues de code systématiques**.
         - Recours à **MLFlow**.
         """)
 
