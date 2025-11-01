@@ -61,6 +61,7 @@
 #                 * Découpage de variables en tranches pour faciliter l'exploitation des résultats par le modèle''')  
 
 import streamlit as st
+from tools import *
 
 # --- En-tête
 st.set_page_config(page_title="Préprocessing et Feature Engineering", layout="wide")
@@ -69,6 +70,8 @@ st.set_page_config(page_title="Préprocessing et Feature Engineering", layout="w
 def affiche():
 
     st.title("⚙️ Preprocessing et Feature Engineering")
+    st.info("L'exploitation des données et leurs transformations")
+    safe_lottie_path(os.path.join(PATH_IMAGES, "Idea_into_Book_Machine.json"), height=200)
 
     # ============================================================
     # 🧹 1. Retraitement initial

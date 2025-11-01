@@ -17,7 +17,8 @@ import geopandas as gpd
 import plotly.express as px
 
 # constantes
-PATH_DATA = "./data/"
+PATH_DATA = os.path.join(".", "data")
+PATH_IMAGES = os.path.join(".", "images")
 
 
 # --- Animation Loader depuis fichiers locaux ---
