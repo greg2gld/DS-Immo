@@ -108,7 +108,8 @@ DATA_PATHS = {
     "Délinquance": "data/Cyrielle/delinquence.csv",
     "Transports": "data/Cyrielle/gtfs-stops-france-export-2024-02-01.csv",
     "BPE": "data/Cyrielle/bpe2023_gironde.csv",
-    "OpenStreetMap": "data/Cyrielle/OSM_POI.csv",
+    #"OpenStreetMap": "data/Cyrielle/OSM_POI.csv",
+    "OpenStreetMap": "data/Cyrielle/openstreetmap_bordeaux.csv",
     "Statistiques ventes": "data/Cyrielle/indicateurs.csv"
 }
 
@@ -190,33 +191,38 @@ def load_csv_auto(path, encoding="utf-8", nrows=None, init_map=True):
     #     st.stop()
 
     # return make_arrow_compatible(df)
+    if path == DATA_PATHS["OpenStreetMap"]:
+        df = pd.read_csv(path)
+    elif path == DATA_PATHS["Transports"]:
+        df = pd.read_csv(path, usecols=["stop_lat", "stop_lon"], dtype=float)
+    else:
+        with open(path, 'r', encoding=encoding) as f:
+            sample = f.read(4096)
+            # Détection du séparateur dominant
+            if '\t' in sample:
+                sep = '\t'
+            elif sample.count(';') > sample.count(','):
+                sep = ';'
+            else:
+                sep = ','
+        df = pd.read_csv(
+            path,
+            sep=sep,
+            encoding=encoding,
+            low_memory=False,
+            na_values=["", " ", "None", "none", "NULL", "null", "NaN", "nan"],
+            keep_default_na=True,
+            nrows=nrows
+        )
 
-    with open(path, 'r', encoding=encoding) as f:
-        sample = f.read(4096)
-        # Détection du séparateur dominant
-        if '\t' in sample:
-            sep = '\t'
-        elif sample.count(';') > sample.count(','):
-            sep = ';'
-        else:
-            sep = ','
-    df = pd.read_csv(
-        path,
-        sep=sep,
-        encoding=encoding,
-        low_memory=False,
-        na_values=["", " ", "None", "none", "NULL", "null", "NaN", "nan"],
-        keep_default_na=True,
-        nrows=nrows
-    )
     df = make_arrow_compatible(df)
     
-    if init_map:
-        possible_lat_cols = ["latitude", "lat", "y", "coord_y", "stop_lat", "LATITUDE"]
-        possible_lon_cols = ["longitude", "lon", "x", "coord_x", "stop_lon", "LONGITUDE"]
-        lat_col = next((col for col in possible_lat_cols if col in df.columns), None)
-        lon_col = next((col for col in possible_lon_cols if col in df.columns), None)
+    possible_lat_cols = ["latitude", "lat", "y", "coord_y", "stop_lat", "LATITUDE"]
+    possible_lon_cols = ["longitude", "lon", "x", "coord_x", "stop_lon", "LONGITUDE"]
+    lat_col = next((col for col in possible_lat_cols if col in df.columns), None)
+    lon_col = next((col for col in possible_lon_cols if col in df.columns), None)
 
+    if init_map:
         if lat_col and lon_col:
             df_valid = df.dropna(subset=[lat_col, lon_col]).copy()
             df_valid[lat_col] = pd.to_numeric(df_valid[lat_col], errors="coerce")
@@ -231,7 +237,7 @@ def load_csv_auto(path, encoding="utf-8", nrows=None, init_map=True):
                         radius=4, color="blue", fill=True, fill_opacity=0.6
                     ).add_to(m)
                 st.session_state["m"] = m
-    return df
+    return df, lat_col, lon_col
 
 
 def show_styled_df(df, max_col_px=380):
@@ -279,14 +285,13 @@ def affiche():
         st.header("Méthodologie")
         st.image(os.path.join("images", "Diag1.png"))
 
-        st.subheader("Bases non retenues dans la modélisation")
-        show_styled_df(BASES_NON_RETENUES)
-        # show_styled_df(BASES_NON_RETENUES.reset_index(drop=True).rename_axis("N°").rename(index=lambda x: x + 1))
-
-        st.subheader("Bases retenues dans la modélisation")
+        st.subheader("✅ Bases retenues dans la modélisation")
         show_styled_df(BASES_RETENUES)
         # show_styled_df(BASES_RETENUES.reset_index(drop=True).rename_axis("N°").rename(index=lambda x: x + 1))
 
+        st.subheader("❌ Bases non retenues dans la modélisation")
+        show_styled_df(BASES_NON_RETENUES)
+        # show_styled_df(BASES_NON_RETENUES.reset_index(drop=True).rename_axis("N°").rename(index=lambda x: x + 1))
 
 
    # --- SECTION 2 : EXPLORATION INTERACTIVE ---
@@ -296,7 +301,7 @@ def affiche():
         path = DATA_PATHS[selected_name]
         
         with st.spinner(f"Chargement de {selected_name}..."):
-            df = load_csv_auto(path, init_map=INIT_MAP[selected_name])
+            df, lat_col, lon_col = load_csv_auto(path, init_map=INIT_MAP[selected_name])
 
         st.success(f"{selected_name} chargée ({df.shape[0]:,} lignes × {df.shape[1]} colonnes)")
         st.write("### Aperçu des données")
@@ -679,25 +684,16 @@ def affiche():
 
             # Cas : Transports — Carte des arrêts
             elif selected_name == "Transports":
-
-                data_path = "data/Cyrielle/gtfs-stops-france-export-2024-02-01.csv"
-
-                if not os.path.exists(data_path):
+                if not os.path.exists(DATA_PATHS[selected_name]):
                     st.warning("❌ Fichier des arrêts de transport introuvable.")
                     st.stop()
 
-                @st.cache_data
-                def load_transport_data():
-                    df = pd.read_csv(data_path, usecols=["stop_lat", "stop_lon"], dtype=float)
-                    return df
-
-                df_arrets = load_transport_data()
-
-                # Filtre Nouvelle-Aquitaine uniquement
+                df_arrets = df.copy()
                 df_arrets = df_arrets[
                     (df_arrets["stop_lat"].between(42.72, 46.80)) &
                     (df_arrets["stop_lon"].between(-1.79, 1.45))
                 ]
+
 
                 # Carte centrée sur Bordeaux pour éviter écran noir
                 view_state = pdk.ViewState(
@@ -727,11 +723,134 @@ def affiche():
 
                 st.pydeck_chart(r)
                 st.success(f"✅ {len(df_arrets):,} arrêts transport affichés en Nouvelle-Aquitaine")
+            elif selected_name == "OpenStreetMap":
+                from geopy.distance import distance
+                # df = df[
+                #     (df["@lat"].between(42.72, 46.80)) &
+                #     (df["@lon"].between(-1.79, 1.45))
+                # ]
+
+                center_lat, center_lon = 44.838118, -0.588613
+                # radius_km = 10
+                # df['distance_km'] = df.apply(
+                #     lambda row: distance((center_lat, center_lon), (row['@lat'], row['@lon'])).km,
+                #     axis=1
+                # )
+
+                # # Filtrer les points dans un rayon de 5 km
+                # df_filtered = df[df['distance_km'] <= radius_km]
+                # df_filtered.to_csv("./data/Cyrielle/openstreetmap_bordeaux.csv", index=True)
+                # def safe_val(x):
+                #     return x if pd.notna(x) else ""
+
+                # if "m" not in st.session_state:
+                #     m = folium.Map(location=[center_lat, center_lon], zoom_start=12, control_scale=True)
+
+                #     # Option: ajouter un layer control + fond
+                #     folium.TileLayer("cartodbpositron").add_to(m)
+                #     folium.TileLayer("OpenStreetMap").add_to(m)
+
+                #     candidate_type_cols = [
+                #         "aerialway", "aerodrome", "aeroway", "amenity", "boundary", "bridge", "craft",
+                #         "emergency", "heritage", "highway", "historic", "junction", "landuse", "leisure",
+                #         "man_made", "military", "mountain_pass", "natural", "office", "place", "railway",
+                #         "shop", "tourism", "tunnel", "waterway"
+                #     ]
+                #     type_cols = [c for c in candidate_type_cols if c in df.columns]
+                #     for c in type_cols:
+                #         df[c] = np.where(df[c].notna() & (df[c].astype(str).str.strip() != ""), 1, 0)
+
+                #     priority = [
+                #         "amenity", "shop", "tourism", "leisure", "historic", "heritage",
+                #         "natural", "man_made", "railway", "aeroway", "highway", "waterway",
+                #         "bridge", "tunnel", "office", "place", "landuse", "craft", "emergency",
+                #         "aerialway", "aerodrome", "junction", "military", "mountain_pass", "boundary"
+                #     ]
+                #     priority = [p for p in priority if p in type_cols]  # garder uniquement celles présentes
+
+                #     def pick_primary_type(row):
+                #         for t in priority:
+                #             if row[t] == 1:
+                #                 return t
+                #         return "other"
+
+                #     df["poi_type"] = df.apply(pick_primary_type, axis=1)
+
+                #     palette = [
+                #         "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
+                #         "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf",
+                #         "#393b79", "#637939", "#8c6d31", "#843c39", "#7b4173",
+                #         "#3182bd", "#e6550d", "#31a354", "#756bb1", "#636363",
+                #         "#9c9ede", "#e7ba52", "#bd9e39", "#ad494a", "#a55194"
+                #     ]
+                #     types_unique = df["poi_type"].unique().tolist()
+                #     type_to_color = {t: palette[i % len(palette)] for i, t in enumerate(sorted(types_unique))}
 
 
+                #     for _, r in df.iterrows():
+                #         lat, lon = float(r["@lat"]), float(r["@lon"])
+                #         t = r["poi_type"]
+                #         color = type_to_color.get(t, "#000000")
 
-                # else:
-                #     if "m" in st.session_state:
-                #         st_folium(st.session_state["m"], width=850, height=600)
-                #     else:
-                #         st.info("Aucune carte disponible pour cette base.")
+                #         # Texte popup
+                #         #name = r.get("name") or r.get("name:fr") or r.get("local_name") or ""
+                #         name = safe_val(r.get("name")) or safe_val(r.get("name:fr")) or safe_val(r.get("local_name")) or ""
+                #         dist = r.get("distance_km")
+                #         dist_txt = f"<br><b>distance_km:</b> {dist:.3f}" if pd.notna(dist) else ""
+                #         popup_html = f"""
+                #         <b>Type:</b> {t}
+                #         <br><b>Nom:</b> {name}
+                #         {dist_txt}
+                #         """
+
+                #         folium.CircleMarker(
+                #             location=(lat, lon),
+                #             radius=5,
+                #             color=color,
+                #             weight=1,
+                #             fill=True,
+                #             fill_color=color,
+                #             fill_opacity=0.85,
+                #             popup=folium.Popup(popup_html, max_width=300),
+                #             tooltip=name if name else t
+                #         ).add_to(m)
+
+
+                #     legend_items = "".join(
+                #         f'<div style="display:flex;align-items:center;margin-bottom:4px">'
+                #         f'<span style="display:inline-block;width:12px;height:12px;background:{type_to_color[t]};margin-right:6px;border:1px solid #333"></span>'
+                #         f'<span style="font-size:12px;color:black;">{t}</span></div>'
+                #         for t in sorted(type_to_color.keys())
+                #     )
+                #     legend_html = f"""
+                #     <div style="
+                #         position: fixed; 
+                #         bottom: 20px; left: 20px; z-index: 9999;
+                #         background: white; padding: 10px 12px; border: 1px solid #aaa; border-radius: 6px;
+                #         box-shadow: 0 1px 4px rgba(0,0,0,0.3); max-height: 50vh; overflow:auto; font-family: Arial; 
+                #     ">
+                #         <div style="font-weight:600; margin-bottom:6px;">Légende</div>
+                #         {legend_items}
+                #     </div>
+                #     """
+                #     m.get_root().html.add_child(folium.Element(legend_html))
+                #     st.session_state["m"] = m
+                #     m.save("./data/map_bordeaux.html")
+                #     st.write(df.shape)
+        
+ 
+                if "m" in st.session_state:
+                    st_folium(st.session_state["m"], width=850, height=600)
+                html_path = Path("./data/map_bordeaux.html")  # adapte le chemin
+
+                # Lire le HTML et l'afficher
+                with open(html_path, "r", encoding="utf-8") as f:
+                    html = f.read()
+
+                st.components.v1.html(html, height=800, scrolling=True)
+                
+            elif lat_col and lon_col:
+                if "m" in st.session_state:
+                    st_folium(st.session_state["m"], width=850, height=600)
+            else:
+                st.info("Aucune carte disponible pour cette base.")
