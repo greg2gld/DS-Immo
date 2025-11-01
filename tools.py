@@ -4,7 +4,7 @@ mettre ici les modules et fonctions communes à toutes les pages
 """
 
 import streamlit as st
-# from streamlit_lottie import st_lottie
+from streamlit_lottie import st_lottie
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
