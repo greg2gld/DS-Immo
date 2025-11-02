@@ -410,7 +410,8 @@ def affiche():
                     color_continuous_scale=px.colors.sequential.Viridis,
                     zoom=9,
                     mapbox_style="open-street-map",
-                    title="Localisation des biens et valeur foncière"
+                    title="Localisation des biens et valeur foncière",
+                    height=900
                 )
                 st.plotly_chart(fig_map, use_container_width=True)
 

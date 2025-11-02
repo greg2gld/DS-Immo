@@ -1,21 +1,9 @@
 """
 code de la page
-
 """
 
 import streamlit as st
 from tools import *
-
-# import des pages ici
-import page_0 # Introduction
-import page_1 # Exploration
-import page_2 # Preprocessing et Feature engineering
-import page_3 # DataVisualisation
-import page_4 # Modélisation
-import page_5 # Simulation
-import page_6 # Conclusion
-
-
 
 def affiche():
     st.title("Prédiction des prix immobiliers en Gironde")
@@ -73,7 +61,7 @@ def affiche():
         # st.image(os.path.join("images", "quartier rond.png"), width =200, )
     
     st.divider()
-    st.header("🎃 Introduction")
+    st.header("Introduction")
     # **Raison d'être du projet :**
 
     st.markdown("""
@@ -85,7 +73,7 @@ def affiche():
 - Aller plus loin que le simple surface * prix/m² du quartier pour tendre vers une valeur **intrinsèque**  
 - Détecter des éventuelles **anomalies de marché**  
                 
-Et aussi... mettre en pratique nos connaissances en Data Science et manipuler plein de données intéressantes ! 😍
+Et aussi... mettre en pratique nos connaissances en Data Science et manipuler plein de données intéressantes !
 ...
             """)
     
@@ -116,10 +104,3 @@ De plus, un des membres de l'équipe habite sur place, ce qui nous a permis de v
 🚀 **Conclusion :** ce que nous avons appris et comment aller plus loin  
 
 """)
-    # page_1.affiche()
-    # st.page_link("page_1.py", label="Exploration")
-
-    # if st.button("🔍 **Exploration :** les données que nous avons retenues"):
-    # #     st.write("Why hello there")
-    #     page_1.affiche()
-    
