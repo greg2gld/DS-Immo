@@ -70,17 +70,32 @@ st.set_page_config(page_title="Préprocessing et Feature Engineering", layout="w
 def affiche():
 
     st.title("⚙️ Preprocessing et Feature Engineering")
-    st.info("L'exploitation des données et leurs transformations")
-    safe_lottie_path(os.path.join(PATH_IMAGES, "Idea_into_Book_Machine.json"), height=200)
+    
+    col1, col2 = st.columns([0.4, 0.6], vertical_alignment='center')
+
+    with col1:
+        st.markdown("#### Comment nous avons nettoyé, transformé et enrichi les données...")
+        
+
+    with col2:
+        safe_lottie_path(os.path.join(PATH_IMAGES, "Idea_into_Book_Machine.json"), height=200)
+    
+    
+    
 
     # ============================================================
     # 🧹 1. Retraitement initial
     # ============================================================
-    st.markdown("## 🔍 1. Retraitement initial")
+    st.markdown("## 1️⃣ Retraitement initial")
 
-    with st.container():
-        st.markdown("### 🏠 **Base DVF géolocalisée**")
+    with st.expander("### 🏠 **Base principale**"):
+        # st.markdown("### 🏠 **Base DVF géolocalisée**")
+        st.markdown("**DVF géolocalisée listant les transactions**")
 
+        col3, col4 = st.columns([0.7, 0.3], vertical_alignment='top')
+    
+    with col3:
+        
         st.info('''
      * Conversion des données dans les types attendus
      * Suppression des lignes inexploitables
@@ -104,37 +119,60 @@ def affiche():
         ✅ **Aucune valeur manquante** à l’issue des retraitements.
         ''')
 
+    with col4:
+        st.image(os.path.join("images", "base principale.png"), width =300, )
+        
+
+
     # --- Autres bases
-    with st.container():
-        st.markdown("### 🧾 **Autres bases complémentaires**")
+    with st.expander("🧾 **Bases périphériques**"):
+        # st.markdown("### 🧾 **Autres bases complémentaires**")
 
-        st.markdown("**BDNB, Filosofi, IRIS, Délinquance, Densité, Indicateurs immobiliers**")
-        st.info("""
-        - Conversion des données dans les types attendus
-        - Traitement éventuel des valeurs manquantes
-        - Pré-sélection de variables pertinentes
-        """)
+        
+        
+        col5, col6 = st.columns([0.7, 0.3], vertical_alignment='top')
+        
+        with col5:
+            st.markdown("**BDNB, Filosofi, IRIS, Délinquance, Densité, Indicateurs immobiliers**")
+            st.info("""
+            - Conversion des données dans les types attendus
+            - Traitement éventuel des valeurs manquantes
+            - Pré-sélection de variables pertinentes
+            """)
 
-        st.markdown("**BPE, OpenStreetMap, Transports**")
-        st.info("""
-        - Conversion des données dans les types attendus
-        - Restriction du périmètre géographique à la **Gironde**  
-        - Fusion des différentes sources dans une base unique  
-        - Suppression des doublons  
-        - Création de **catégories agrégées** pour réduire la dimensionnalité
-        """)
+            st.markdown("**BPE, OpenStreetMap, Transports**")
+            st.info("""
+            - Conversion des données dans les types attendus
+            - Restriction du périmètre géographique à la **Gironde**  
+            - Fusion des différentes sources dans une base unique  
+            - Suppression des doublons  
+            - Création de **catégories agrégées** pour réduire la dimensionnalité
+            """)
+
+        with col6:
+            st.image(os.path.join("images", "bases periph.png"), width =300, )
 
     # ============================================================
     # 🧬 2. Constitution de la base finale
     # ============================================================
-    st.markdown("## 🧬 2. Constitution de la base finale")
+    st.markdown("## 2️⃣ Agrégation et enrichissement")
 
-    st.success('''
-        * Rapprochement de toutes les bases précédemment citées
-        * Traitement des valeurs manquantes lors du croisement des bases
-        * Suppression de certaines variables
-        * Calcul du nombre de points d'intérêt par catégorie avec 4 groupes de distance (50 mètres, 500 mètres, 2 et 10 kilomètres)
-        * Détermination de la distance du point d'intérêt le plus proche pour chaque catégorie
-        * Évolution des variables (une fois les premières simulations lancées) :
-            * Création de nouvelles variables plus faciles à interpréter
-            * Découpage de variables en tranches pour faciliter l'exploitation des résultats par le modèle''')  
+
+
+    with st.expander("🧾 **Constitution de la base finale**"):
+
+        col7, col8 = st.columns([0.7, 0.3], vertical_alignment='top')
+
+        with col7:
+            st.success('''
+                * Rapprochement de toutes les bases précédemment citées
+                * Traitement des valeurs manquantes lors du croisement des bases
+                * Suppression de certaines variables
+                * Calcul du nombre de points d'intérêt par catégorie avec 4 groupes de distance (50 mètres, 500 mètres, 2 et 10 kilomètres)
+                * Détermination de la distance du point d'intérêt le plus proche pour chaque catégorie
+                * Évolution des variables (une fois les premières simulations lancées) :
+                    * Création de nouvelles variables plus faciles à interpréter
+                    * Découpage de variables en tranches pour faciliter l'exploitation des résultats par le modèle''')  
+        
+        with col8:
+            st.image(os.path.join("images", "Dataset enrichi.png"), width =200, )
