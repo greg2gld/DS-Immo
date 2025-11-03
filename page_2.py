@@ -72,11 +72,11 @@ def affiche():
     st.title("⚙️ Preprocessing et Feature Engineering")
     # st.markdown("#### Comment nous avons nettoyé, transformé et enrichi les données...")
 
-    col01, col02 = st.columns([0.5, 0.5], vertical_alignment='top')
+    col01, col02 = st.columns([0.5, 0.5], vertical_alignment='top', )
     with col01:
-        st.markdown("## Bases")
+        st.markdown("## 🗂️ Bases", )
     with col02:
-        st.markdown("## Travaux effectués")
+        st.markdown("## 🔨 Travaux effectués")
 
     col1, col2 = st.columns([0.5, 0.5], vertical_alignment='center')
 
@@ -138,7 +138,7 @@ def affiche():
         with st.expander(" **💰 Constitution de la base finale**"):
 
             st.info("""
-- Jointures multiples (codes communes, IRIS, parcelle, batiment…)
+- Jointures multiples (codes communes, IRIS, parcelle, bâtiment…)
 - Calcul du nombre de points d'intérêt par catégorie avec 4 groupes de distance (50 mètres, 500 mètres, 2 et 10 kilomètres)
 - Détermination de la distance du point d'intérêt le plus proche pour chaque catégorie
 - Évolution des variables dans le cadre de la modélisation

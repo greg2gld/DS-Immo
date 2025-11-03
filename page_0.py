@@ -10,7 +10,7 @@ def affiche():
      
 
     # Affichage vertical en 4 colonnes
-    col1, col2 = st.columns([0.4, 0.6], vertical_alignment='center')
+    col1, col2 = st.columns([0.3, 0.7], vertical_alignment='center')
 
     with col1:
         st.image(os.path.join("images", "Image Gironde intro.png"), width =300, )
@@ -20,7 +20,7 @@ def affiche():
         st.header("🎯Objectif :")
         # with st.container():
 
-        st.info("**Construire un modèle de prédiction de prix de biens immobiliers !**")
+        st.info("➡️ **Construire un modèle de prédiction de prix de biens immobiliers !**")
 
         
         st.markdown("""                    
@@ -34,7 +34,7 @@ def affiche():
         with col22:
             st.markdown("""
 - Type de bien (appartement, maison, avec ou sans terrain...)
-- Surface, nombe de pièces, DPE...
+- Surface, nombre de pièces, DPE...
 - Localisation géographique
                         """)
         with col21:
@@ -65,7 +65,7 @@ def affiche():
     # **Raison d'être du projet :**
 
     st.markdown("""
-### Raison d'être du projet :""")
+### 💡 Raison d'être du projet :""")
     st.info("""
 - **Sujet populaire** : en France 18 millions de ménages propriétaires  
 - Prix **complexes et dynamiques**, dépendants de multiples facteurs  
@@ -78,11 +78,11 @@ Et aussi... mettre en pratique nos connaissances en Data Science et manipuler pl
             """)
     
     st.markdown("""
-### Pourquoi la Gironde ?""")
+### 🌍 Pourquoi la Gironde ?""")
 
     st.info("""
 * Besoin de réduire le périmètre : s'adapter à nos ressources (temps humain et machines)  
-* Région vaste et variée, présentant un bon échantillon du territoire  
+* Département vaste et varié, présentant un bon échantillon du territoire  
     * Aussi bien géographique (villes, zones rurales, bord de mer)  
     * Que socio-économique  
 * Attractivité de certaines zones et bonne dynamique des prix  
