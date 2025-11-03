@@ -94,7 +94,7 @@ def affiche():
         
         
 
-        st.markdown("#### 1️⃣ Préparation des données et Data Cleaning")
+        st.markdown("### 1️⃣ Préparation des données et Data Cleaning")
 
         with st.expander("**💾 Pour toutes les bases:**"):
                             
@@ -131,7 +131,7 @@ def affiche():
         # ============================================================
         # 🧬 2. Constitution de la base finale
         # ============================================================
-        st.markdown("## 2️⃣ Agrégation et enrichissement")
+        st.markdown("### 2️⃣ Agrégation et enrichissement")
 
 
 
