@@ -20,7 +20,6 @@ def affiche():
 
     st.write('''Nous avons enrichi le dataset de certaines variables afin d’augmenter le pouvoir explicatif du modèle.
     Exemples :
-
     * Surface par pièce (surface / nombre de pièces)
     * Variables booléennes : maisons, terrains
     * Distance au centre de Bordeaux (via latitude/longitude)
