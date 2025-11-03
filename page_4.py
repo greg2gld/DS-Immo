@@ -38,7 +38,7 @@ def affiche():
     # -------- 3. Encodage ------------
     st.header("3️⃣ Encodage des variables")
 
-    st.write("Nous avons utilisé un mix d'encoding : Ordinal, One-Hot et Target Encoding...")
+    st.write("Nous avons utilisé un mix d'encoding : **Ordinal**, **One-Hot** et **Target Encoding**...")
 
     # -------- 4. Normalisation --------
     st.header("4️⃣ Choix du scaler")
@@ -58,7 +58,7 @@ def affiche():
     # -------- 6. Clustering --------
     st.header("6️⃣ Clustering")
 
-    st.write("Recours à HDBScan en retirant les anomalies identifiées par -1")
+    st.write("Recours à **HDBScan** en retirant les anomalies identifiées par -1")
 
     # -------- 7. Entraînement du modèle --------
     st.header("7️⃣ Entraînement du modèle avec optimisation des hyperparamètres")
