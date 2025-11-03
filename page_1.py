@@ -268,7 +268,7 @@ def show_styled_df(df, max_col_px=380):
 
 # PAGE PRINCIPALE
 def affiche():
-    st.title("Exploration des données")
+    st.title("🔍 Exploration des données")
  
     tab1, tab2 = st.tabs(["📚 Synthèse des bases", "🔎 Exploration des bases retenues"])
 
@@ -279,12 +279,10 @@ def affiche():
 
         ➡️ Sans données fournies par DataScientest  
         ➡️ Recherche et exploration de données open source  
-        ➡️ Sélection finale : ~20 fichiers
+        ➡️ Sélection finale : ~20 fichiers  
+                    
         """)
         
-        st.header("Méthodologie")
-        st.image(os.path.join("images", "Diag1.png"))
-
         st.subheader("✅ Bases retenues dans la modélisation")
         show_styled_df(BASES_RETENUES)
         # show_styled_df(BASES_RETENUES.reset_index(drop=True).rename_axis("N°").rename(index=lambda x: x + 1))
