@@ -15,29 +15,64 @@ def affiche():
     Cette page retrace l’ensemble du processus d’entraînement et d’optimisation du modèle prédictif.
     """)
 
-    # -------- 1. Encodage --------
-    st.header("1️⃣ Encodage des variables")
+    # - 1. Création de nouvelles variables -
+    st.header("1️⃣Création de nouvelles variables")
+
+    st.write('''Nous avons enrichi le dataset de certaines variables afin d’augmenter le pouvoir explicatif du modèle.
+    Exemples :
+
+    - Surface par pièce (surface / nombre de pièces)
+    - Variables booléennes : maisons, terrains
+    - Distance au centre de Bordeaux (via latitude/longitude)
+    - Nombre de POI proches''')
+
+    # -- 2. Création de tranches-----
+    st.header("2️⃣ Découpage en tranches de certaines variables")
+
+    st.write('''Pour améliorer les performances du modèle, on a créé des tranches pour certaines variables :
+    - Surface du terrain 1
+    - Nombre de POI
+    - Délinquance''')
+
+    # -------- 3. Encodage ------------
+    st.header("3️⃣ Encodage des variables")
 
     st.write("Nous avons utilisé un mix d'encoding : Ordinal, One-Hot et Target Encoding...")
 
-    # -------- 2. Normalisation --------
-    st.header("2️⃣ Choix du scaler")
+    # -------- 4. Normalisation --------
+    st.header("4️⃣ Choix du scaler")
 
     st.write("""
     Trois scalers testés : **StandardScaler**, **MinMaxScaler**, **RobustScaler**.  
     Le **StandardScaler** a été retenu — pas de gain significatif avec les autres.
     """)
+ 
+    # -------- 5. Feature Selection --------
+    st.header("5️⃣ Feature selection")
 
-    # -------- 3. Modèles testés --------
-    st.header("3️⃣ Sélection du modèle de base")
+    st.write('''La sélection via **SelectKBest** a donné de meilleurs résultats en laissant le modèle choisir les informations utiles.  
+    Cette approche limite les décisions arbitraires et garantit une optimisation basée sur la performance réelle.''')
+
+
+    # -------- 6. Clustering --------
+    st.header("6️⃣ Clustering")
+
+    st.write("Recours à HDBScan en retirant les anomalies identifiées par -1")
+
+    # -------- 7. Entraînement du modèle --------
+    st.header("7️⃣ Entraînement du modèle avec optimisation des hyperparamètres")
+
+
+    # -------- Choix du modèle --------
+    st.header("Comment avons-nous choisi le modèle ?")
 
     image = Image.open("data/Cyrielle/resultats_lazyregressor.png")
     st.image(image, caption="Résultats LazyPredict – Comparaison des modèles")
 
     st.success("✅ LGBMRegressor retenu")
 
-    # -------- 4. Optimisations --------
-    st.header("4️⃣ Optimisation du modèle")
+    # -------- Résultats --------
+    st.header("Résultats")
 
     st.header("📈 Évolution des performances du modèle")
 
