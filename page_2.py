@@ -70,109 +70,78 @@ st.set_page_config(page_title="Préprocessing et Feature Engineering", layout="w
 def affiche():
 
     st.title("⚙️ Preprocessing et Feature Engineering")
-    
-    col1, col2 = st.columns([0.4, 0.6], vertical_alignment='center')
+    # st.markdown("#### Comment nous avons nettoyé, transformé et enrichi les données...")
+
+    col01, col02 = st.columns([0.5, 0.5], vertical_alignment='top')
+    with col01:
+        st.markdown("## Bases")
+    with col02:
+        st.markdown("## Travaux effectués")
+
+    col1, col2 = st.columns([0.5, 0.5], vertical_alignment='center')
 
     with col1:
-        st.markdown("#### Comment nous avons nettoyé, transformé et enrichi les données...")
+        
+        st.image(os.path.join("images", "Diag1_light2.png"))
         
 
     with col2:
-        safe_lottie_path(os.path.join(PATH_IMAGES, "Idea_into_Book_Machine.json"), height=200)
-    
-    
-    
-
-    # ============================================================
-    # 🧹 1. Retraitement initial
-    # ============================================================
-    st.markdown("## 1️⃣ Retraitement initial")
-
-    with st.expander("### 🏠 **Base principale**"):
-        # st.markdown("### 🏠 **Base DVF géolocalisée**")
-        st.markdown("**DVF géolocalisée listant les transactions**")
-
-        col3, col4 = st.columns([0.7, 0.3], vertical_alignment='top')
-    
-    with col3:
+        # safe_lottie_path(os.path.join(PATH_IMAGES, "Idea_into_Book_Machine.json"), height=200)
         
-        st.info('''
-     * Conversion des données dans les types attendus
-     * Suppression des lignes inexploitables
-     * Restrictions du périmètre d'étude aux seules ventes
-     * Renseignement des valeurs manquantes des types de locaux
-     * Création de variables pour étudier les ventes comportant de multiples biens ou parcelles
-     * Périmètre restreint aux transactions comportant au maximum 2 lignes (1 bien immobilier et 1 annexe dans la même commune)                        
-     * Conservation des lignes relatives aux ventes :
-         * d'appartements
-         * de maisons
-         * de locaux commerciaux, industriels ou assimilés
-
-     ➡️ Résultat : 84 613 observations conservées.
-
-     * Traitement des valeurs manquantes (suppression ou recherche de la donnée notamment en termes de géolocalisation (Geocoding par API))
-    
-     ➡️ Résultat : Aucune valeur manquante à l'issue des retraitements
-
-     * Traitement des valeurs extrêmes ou aberrantes
-
-        ✅ **Aucune valeur manquante** à l’issue des retraitements.
-        ''')
-
-    with col4:
-        st.image(os.path.join("images", "base principale.png"), width =300, )
-        
-
-
-    # --- Autres bases
-    with st.expander("🧾 **Bases périphériques**"):
-        # st.markdown("### 🧾 **Autres bases complémentaires**")
-
+        # ============================================================
+        # 🧹 1. Retraitement initial
+        # ============================================================
         
         
-        col5, col6 = st.columns([0.7, 0.3], vertical_alignment='top')
-        
-        with col5:
-            st.markdown("**BDNB, Filosofi, IRIS, Délinquance, Densité, Indicateurs immobiliers**")
+
+        st.markdown("#### 1️⃣ Préparation des données et Data Cleaning")
+
+        with st.expander("**💾 Pour toutes les bases:**"):
+                            
+            st.info('''
+* Conversion des types (.dtype)
+* Traitement des valeurs manquantes (manuel, ou usage d’API) 
+* Suppressions des lignes inexploitables ou doublons
+* Pré-sélection de variables pertinentes
+* Traitement des valeurs extrêmes ou aberrantes
+                    ''')
+           
+        # --- Autres bases
+        with st.expander("**🏡 Spécifiques au DVF:**"):
+            
             st.info("""
-            - Conversion des données dans les types attendus
-            - Traitement éventuel des valeurs manquantes
-            - Pré-sélection de variables pertinentes
+- Restrictions du périmètre d'étude aux seules ventes
+- Création de variables pour étudier les ventes comportant de multiples biens ou parcelles
+- Périmètre restreint aux transactions comportant au maximum 2 lignes (1 bien immobilier et 1 annexe dans la même commune)
+- Conservation des lignes relatives aux ventes :
+    - d'appartements
+    - de maisons
+    - de locaux commerciaux, industriels ou assimilés
+
             """)
 
-            st.markdown("**BPE, OpenStreetMap, Transports**")
+        with st.expander("**📊 Spécifiques à BPE, OpenStreetMap, Transports**"):
             st.info("""
-            - Conversion des données dans les types attendus
-            - Restriction du périmètre géographique à la **Gironde**  
-            - Fusion des différentes sources dans une base unique  
-            - Suppression des doublons  
-            - Création de **catégories agrégées** pour réduire la dimensionnalité
+- Restriction du périmètre géographique: carré incluant la Gironde (longitude/latitude)
+- Fusion des différentes sources dans une base unique
+- Agrégation de features pour réduction de dimension (Urgences + Maternité + Centre de santé + … = Établissements de santé) 144 types -> 24  catégories de POI
+
             """)
 
-        with col6:
-            st.image(os.path.join("images", "bases periph.png"), width =300, )
-
-    # ============================================================
-    # 🧬 2. Constitution de la base finale
-    # ============================================================
-    st.markdown("## 2️⃣ Agrégation et enrichissement")
+        # ============================================================
+        # 🧬 2. Constitution de la base finale
+        # ============================================================
+        st.markdown("## 2️⃣ Agrégation et enrichissement")
 
 
 
-    with st.expander("🧾 **Constitution de la base finale**"):
+        with st.expander(" **💰 Constitution de la base finale**"):
 
-        col7, col8 = st.columns([0.7, 0.3], vertical_alignment='top')
-
-        with col7:
-            st.success('''
-                * Rapprochement de toutes les bases précédemment citées
-                * Traitement des valeurs manquantes lors du croisement des bases
-                * Suppression de certaines variables
-                * Calcul du nombre de points d'intérêt par catégorie avec 4 groupes de distance (50 mètres, 500 mètres, 2 et 10 kilomètres)
-                * Détermination de la distance du point d'intérêt le plus proche pour chaque catégorie
-                * Évolution des variables (une fois les premières simulations lancées) :
-                    * Création de nouvelles variables plus faciles à interpréter
-                    * Découpage de variables en tranches pour faciliter l'exploitation des résultats par le modèle''')  
-        
-        with col8:
-            st.image(os.path.join("images", "Dataset enrichi.png"), width =200, )
+            st.info("""
+- Jointures multiples (codes communes, IRIS, parcelle, batiment…)
+- Calcul du nombre de points d'intérêt par catégorie avec 4 groupes de distance (50 mètres, 500 mètres, 2 et 10 kilomètres)
+- Détermination de la distance du point d'intérêt le plus proche pour chaque catégorie
+- Itérations avec la modélisation :
+    - Simplification de variables
+    - Découpage en tranches (bin)
+                        """)
