@@ -124,7 +124,7 @@ def affiche():
 
     # Affichage tableau
     with st.expander("📊 Voir les données brutes"):
-        st.dataframe(df)
+        st.dataframe(df.drop(columns=["R² train (%)", "R² test (%)"]))
 
     st.info("""
     Optimisations effectuées :
