@@ -21,10 +21,10 @@ def affiche():
     st.write('''Nous avons enrichi le dataset de certaines variables afin d’augmenter le pouvoir explicatif du modèle.
     Exemples :
 
-    - Surface par pièce (surface / nombre de pièces)
-    - Variables booléennes : maisons, terrains
-    - Distance au centre de Bordeaux (via latitude/longitude)
-    - Nombre de POI proches''')
+    * Surface par pièce (surface / nombre de pièces)
+    * Variables booléennes : maisons, terrains
+    * Distance au centre de Bordeaux (via latitude/longitude)
+    * Nombre de POI proches''')
 
     # -- 2. Création de tranches-----
     st.header("2️⃣ Découpage en tranches de certaines variables")
