@@ -122,7 +122,7 @@ def affiche():
 
         with st.expander("**📊 Spécifiques à BPE, OpenStreetMap, Transports**"):
             st.info("""
-- Restriction du périmètre géographique: carré incluant la Gironde (longitude/latitude)
+- Restriction du périmètre géographique: rectangle incluant la Gironde (longitude/latitude)
 - Fusion des différentes sources dans une base unique
 - Agrégation de features pour réduction de dimension (Urgences + Maternité + Centre de santé + … = Établissements de santé) 144 types -> 24  catégories de POI
 
@@ -141,7 +141,5 @@ def affiche():
 - Jointures multiples (codes communes, IRIS, parcelle, batiment…)
 - Calcul du nombre de points d'intérêt par catégorie avec 4 groupes de distance (50 mètres, 500 mètres, 2 et 10 kilomètres)
 - Détermination de la distance du point d'intérêt le plus proche pour chaque catégorie
-- Itérations avec la modélisation :
-    - Simplification de variables
-    - Découpage en tranches (bin)
+- Évolution des variables dans le cadre de la modélisation
                         """)
